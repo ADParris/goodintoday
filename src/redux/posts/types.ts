@@ -7,18 +7,34 @@ export const PROCESSING_ERROR = 'PROCESSING_ERROR'
 export const RETRIEVE_POSTS_SUCCESS = 'RETRIEVE_POSTS_SUCCESS'
 
 // Interfaces...
+export interface PostVideo {
+	image: string | null
+	link: string | null
+	site: string | null
+	title: string | null
+}
+
+export interface PostGif {
+	link: string | null
+	title: string | null
+	source: {
+		site: string | null
+		url?: string | null
+		user?: {
+			name?: string | null
+		} | null
+	}
+}
+
 export interface PostContent {
+	gif?: PostGif | null
 	image?: string | null
 	text: string | null
-	video?: {
-		image: string
-		link: string
-		site: string
-		title: string
-	} | null
+	video?: PostVideo | null
 }
 
 export interface Post {
+	background: string | null
 	content: PostContent
 	createdAt: number
 	id?: string
@@ -27,21 +43,33 @@ export interface Post {
 }
 
 export interface DisplayPost {
+	background: string | null
 	content: {
+		gif?: {
+			link: string | null
+			title: string | null
+			source: {
+				site: string | null
+				user?: {
+					name?: string | null
+				} | null
+			}
+		} | null
 		image?: string | null
-		text?: string | undefined
+		text?: string | null
 		video?: {
-			image: string
-			link: string
-			site: string
-			title: string
+			image: string | null
+			link: string | null
+			site: string | null
+			title: string | null
 		} | null
 	}
 	createdAt: number
 	id?: string
 	uid?: string
 	updatedAt: number | null
-	userInfo: {
+	user: {
+		id: string
 		image: string
 		name: {
 			first: string
@@ -52,15 +80,15 @@ export interface DisplayPost {
 }
 
 export interface PostErrMsg {
-	from: string
-	msg: string
+	from: string | null
+	msg: string | null
 }
 
 export interface PostState {
 	posts: {
 		errMsg: string | null
 		isProcessing: boolean
-		posts: Post[] | []
+		posts: DisplayPost[] | []
 	}
 }
 

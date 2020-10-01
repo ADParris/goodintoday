@@ -1,24 +1,27 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import { auth } from '../../apis/firebase'
 
+import { selectUser } from '../../redux/user/selectors'
+
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 
-import withUserData, { DisplayUser } from '../../HOCs/withUserData'
+const Menu = () => {
+	const user = useSelector(selectUser)
 
-const Menu = ({ image, name, profile }: DisplayUser) => {
 	const signOut = () => auth.signOut()
 
 	return (
 		<StyledMenu>
-			{name ? (
+			{user ? (
 				<>
 					<div>
-						<Link to={`/${profile}`}>
-							<img src={image} alt={name.full} />
-							{name.first}
+						<Link to={`${user.profile}`}>
+							<img src={user.image} alt={user.name.full} />
+							{user.name.first}
 						</Link>
 					</div>
 					<div className="nav-item" onClick={signOut}>
@@ -85,4 +88,4 @@ const StyledMenu = styled.nav`
 	}
 `
 
-export default withUserData<DisplayUser>(Menu)
+export default Menu

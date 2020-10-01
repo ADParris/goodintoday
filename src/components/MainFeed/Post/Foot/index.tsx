@@ -32,6 +32,7 @@ const StyledPostFooter = styled.div`
 	padding: var(--gap-outer);
 
 	.post-options {
+		border-top: 0.1rem solid var(--color-border);
 		padding: var(--gap-inner);
 		display: flex;
 

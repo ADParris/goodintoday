@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { DisplayPost, PostState } from './types'
+import { PostState } from './types'
 
 const selectPosts = (state: PostState) => state.posts
 
@@ -10,7 +10,9 @@ export const selectCurrentPosts = createSelector(
 )
 
 export const selectPostById = (id: string) =>
-	createSelector([selectPosts], posts => {
-		const result = posts.posts.filter(post => post.id === id)
-		return result[0] as DisplayPost
-	})
+	createSelector([selectPosts], posts =>
+		posts.posts.filter(post => post.id === id)
+	)
+
+export const selectIsProcessing = () =>
+	createSelector([selectPosts], posts => posts.isProcessing)

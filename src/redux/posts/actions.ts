@@ -23,7 +23,7 @@ const processingStart = (): PostActionTypes => ({
 	type: PROCESSING_START,
 })
 
-const processingComplete = (): PostActionTypes => ({
+export const processingComplete = (): PostActionTypes => ({
 	type: PROCESSING_COMPLETE,
 })
 

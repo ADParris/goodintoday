@@ -1,21 +1,34 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
 
-interface DisplayGifProps {
-	gif: string
-	title: string
-}
+import { prepostItem } from '../../../redux/prepost/actions'
+import { isOpen } from '../../../redux/composer/actions'
+import { toggleMenu } from '../../../redux/menu/actions'
+import { PostGif } from '../../../redux/posts/types'
 
-const DisplayGif = ({ gif, title }: DisplayGifProps) => {
-	const handleClick = () => console.log(title)
+const DisplayGif = ({ link, source, title }: PostGif) => {
+	const dispatch = useDispatch()
+
+	const handleClick = () => {
+		dispatch(
+			prepostItem({
+				gif: { link, source, title },
+			})
+		)
+		dispatch(toggleMenu(''))
+		dispatch(isOpen(true))
+	}
+
 	return (
 		<StyledDisplayGif onClick={handleClick}>
-			<img src={gif} alt={title} />
+			<img src={link!} alt={title!} />
 		</StyledDisplayGif>
 	)
 }
 
 const StyledDisplayGif = styled.div`
+	margin-bottom: var(--gap-inner);
 	cursor: pointer;
 
 	img {

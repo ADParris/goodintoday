@@ -1,28 +1,7 @@
 import { processYouTubeLink } from './youtubeLinks'
 import { processImageLink } from './imageLinks'
 
-interface Video {
-	image: string
-	link: string
-	site: string
-	title: string
-}
-
-interface PostContent {
-	image?: string | null
-	text: string
-	video?: Video | null
-}
-
-interface ProcessedLink {
-	image?: string | null
-	video?: {
-		image: string
-		link: string
-		site: string
-		title: string
-	} | null
-}
+import { PostContent } from '../../redux/posts/types'
 
 type Links = string | string[] | null
 
@@ -45,15 +24,15 @@ const processLinks = (links: string[]) => {
 
 const buildPostContent = (
 	post: string,
-	processedLinks: ProcessedLink[] | null
+	processedLinks: PostContent[] | null
 ): PostContent => {
-	const firstLink: ProcessedLink | null = processedLinks
+	const firstLink: PostContent | null = processedLinks
 		? processedLinks[0]
 		: null
 
 	return {
 		image: firstLink && firstLink.image ? firstLink.image : null,
-		text: post,
+		text: '',
 		video: firstLink && firstLink.video ? firstLink.video : null,
 	}
 }
@@ -61,5 +40,11 @@ const buildPostContent = (
 export const preparePostForDatabase = async (post: string) => {
 	const links: Links = getLinksFromPost(post)
 	const processedLinks = links ? await processLinks(links as string[]) : null
-	return buildPostContent(post, processedLinks as ProcessedLink[])
+	return buildPostContent(post, processedLinks as PostContent[])
+}
+
+export const prepareSubmissionForPrepost = async (post: string) => {
+	const links: Links = getLinksFromPost(post)
+	const processedLinks = links ? await processLinks(links as string[]) : null
+	return buildPostContent(post, processedLinks as PostContent[])
 }

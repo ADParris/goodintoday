@@ -2,14 +2,23 @@ import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Composer from './Composer'
+import Composer from '../Shared/Composer'
 import Post from './Post'
 
 import { retrievePostsStartAsync } from '../../redux/posts/actions'
 import { selectCurrentPosts } from '../../redux/posts/selectors'
 import { DisplayPost } from '../../redux/posts/types'
 
-const MainFeed = () => {
+interface Props {
+	from: string
+	width: number
+}
+
+interface StyledProps {
+	width: number
+}
+
+const MainFeed = ({ from, width }: Props) => {
 	const posts = useSelector(selectCurrentPosts)
 	const dispatch = useDispatch()
 
@@ -18,8 +27,8 @@ const MainFeed = () => {
 	}, [dispatch])
 
 	return (
-		<StyledMainFeed>
-			<Composer />
+		<StyledMainFeed width={width}>
+			<Composer from={from} />
 			{posts &&
 				(posts as DisplayPost[]).map(post => (
 					<Post key={post.id} post={post} />
@@ -30,7 +39,7 @@ const MainFeed = () => {
 
 const StyledMainFeed = styled.main`
 	flex-direction: column;
-	max-width: 50rem;
+	max-width: ${(props: StyledProps) => props.width / 10}rem;
 	display: flex;
 `
 

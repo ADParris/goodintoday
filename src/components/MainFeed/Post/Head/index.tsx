@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 import { ReactComponent as MenuIcon } from '../../../../assets/menu-icon.svg'
 
@@ -8,44 +9,31 @@ import PostMoreMenu from './PostMoreMenu'
 
 import { DisplayPost } from '../../../../redux/posts/types'
 
-interface PostHeaderProps {
-	post: DisplayPost
-}
-
-const PostHeader = ({
-	post: {
-		createdAt,
-		id,
-		updatedAt,
-		userInfo: { image, name, profile },
-	},
-}: PostHeaderProps) => {
-	return (
-		<StyledPostHeader>
-			<div className="post-header">
-				<a href={profile}>
-					<img src={image} alt={name.full} />
-				</a>
-				<div className="post-inner-container">
-					<div className="post-inner">
-						<h5>
-							<a href={profile}>{name}</a>
-						</h5>
-						<div className="post-header-meta">
-							<span className="post-time">
-								{updatedAt ? updatedAt : createdAt}
-							</span>
-							<span>&nbsp;·&nbsp;</span>
-						</div>
+const PostHeader = ({ id, createdAt, updatedAt, user }: DisplayPost) => (
+	<StyledPostHeader>
+		<div className="post-header">
+			<Link to={user.profile}>
+				<img src={user.image} alt={user.name.full} />
+			</Link>
+			<div className="post-inner-container">
+				<div className="post-inner">
+					<h5>
+						<Link to={user.profile}>{user.name.full}</Link>
+					</h5>
+					<div className="post-header-meta">
+						<span className="post-time">
+							{updatedAt ? updatedAt : createdAt}
+						</span>
+						<span>&nbsp;·&nbsp;</span>
 					</div>
-					<MoreMenu MenuIcon={MenuIcon} top={2}>
-						<PostMoreMenu postId={id!} />
-					</MoreMenu>
 				</div>
+				<MoreMenu id={id!} MenuIcon={MenuIcon} top={2}>
+					<PostMoreMenu id={id!} />
+				</MoreMenu>
 			</div>
-		</StyledPostHeader>
-	)
-}
+		</div>
+	</StyledPostHeader>
+)
 
 const StyledPostHeader = styled.div`
 	align-items: flex-start;
@@ -54,7 +42,6 @@ const StyledPostHeader = styled.div`
 
 	.post-header {
 		display: flex;
-		height: 100%;
 		width: 100%;
 
 		a {
@@ -98,6 +85,13 @@ const StyledPostHeader = styled.div`
 					}
 				}
 			}
+		}
+
+		.menu-button {
+			margin-top: -1rem;
+			display: flex;
+			height: auto;
+			width: auto;
 		}
 	}
 `

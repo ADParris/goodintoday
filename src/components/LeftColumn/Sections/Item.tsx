@@ -1,22 +1,31 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
-interface ItemProps {
+type ItemProps = {
 	item: {
 		icon: string
+		internal: boolean
 		link: string
-		title: string
+		name: string
 	}
 }
 
 const Item = ({ item }: ItemProps) => {
-	const { icon, link, title } = item
+	const { icon, internal, link, name } = item
 	return (
 		<StyledItem>
-			<a href={link} rel="noopener noreferrer" target="_blank">
-				<img src={icon} alt={title} />
-				<span>{title}</span>
-			</a>
+			{internal ? (
+				<Link to={link}>
+					<img src={icon} alt={name} />
+					<span>{name}</span>
+				</Link>
+			) : (
+				<a href={link} rel="noopener noreferrer" target="_blank">
+					<img src={icon} alt={name} />
+					<span>{name}</span>
+				</a>
+			)}
 		</StyledItem>
 	)
 }

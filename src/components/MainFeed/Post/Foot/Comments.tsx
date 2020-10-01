@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useSelector } from 'react-redux'
 
-import withUserData, { DisplayUser } from '../../../../HOCs/withUserData'
+import { selectUser } from '../../../../redux/user/selectors'
 
 type ChangeProps = {
 	target: {
@@ -9,8 +10,9 @@ type ChangeProps = {
 	}
 }
 
-const Comments = ({ image, name }: DisplayUser) => {
+const Comments = () => {
 	const [comment, setComment] = React.useState('')
+	const user = useSelector(selectUser)
 
 	const handleChange = ({ target: { value } }: ChangeProps) => setComment(value)
 
@@ -24,7 +26,7 @@ const Comments = ({ image, name }: DisplayUser) => {
 
 	return (
 		<StyledComments>
-			<img src={image} alt={name!.full} />
+			<img src={user?.image} alt={user?.name.full} />
 			<form onSubmit={() => handleSubmit}>
 				<input
 					type="text"
@@ -62,4 +64,4 @@ const StyledComments = styled.div`
 	}
 `
 
-export default withUserData<DisplayUser>(Comments)
+export default Comments

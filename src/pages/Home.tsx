@@ -8,7 +8,7 @@ import RightColumn from '../components/RightColumn'
 const Home = () => (
 	<StyledHome>
 		<LeftColumn />
-		<MainFeed />
+		<MainFeed width={500} from="feed" />
 		<RightColumn />
 	</StyledHome>
 )

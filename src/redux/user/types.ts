@@ -1,18 +1,7 @@
-export const SET_CURRENT_USER = 'SET_CURRENT_USER'
+export const SET_USER = 'SET_USER'
 
 export interface User {
-	id?: string
-	displayName?: string
-	name?: string
-	photoURL?: string
-	profileLink?: string
-}
-
-export interface CurrentUser {
-	currentUser: User | null
-}
-
-export interface DisplayUser {
+	id: string
 	image: string
 	name: {
 		first: string
@@ -22,14 +11,22 @@ export interface DisplayUser {
 }
 
 export interface UserState {
-	user?: {
-		currentUser: User | null
-	} | null
+	user: User | null
 }
 
-interface SetCurrentUser {
-	type: typeof SET_CURRENT_USER
-	payload: User | null
+interface SetUser {
+	type: typeof SET_USER
+	payload:
+		| User
+		| {
+				id: null
+				image: null
+				name: {
+					first: null
+					full: null
+				}
+				profile: null
+		  }
 }
 
-export type UserActionTypes = SetCurrentUser
+export type UserActionTypes = SetUser

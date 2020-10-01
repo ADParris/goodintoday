@@ -1,21 +1,26 @@
 import React from 'react'
 import styled from 'styled-components'
 
-interface FormInputProps {
+interface CustomInputProps {
 	handleChange: any
-	label: string
+	label?: string
 	value: string
 	required?: any
-	name: any
+	name?: any
 	type: any
+	placeholder?: string
 }
 
-const FormInput = ({ handleChange, label, ...otherProps }: FormInputProps) => (
-	<StyledFormInput>
-		<input className="form-input" {...otherProps} onChange={handleChange} />
+const CustomInput = ({
+	handleChange,
+	label,
+	...otherProps
+}: CustomInputProps) => (
+	<StyledCustomInput>
+		<input className="custom-input" {...otherProps} onChange={handleChange} />
 		{label ? (
 			<label
-				className={`form-input-label${
+				className={`custom-input-label${
 					otherProps.value.length ? ' shrink' : ''
 				}`}
 				htmlFor={label}
@@ -23,7 +28,7 @@ const FormInput = ({ handleChange, label, ...otherProps }: FormInputProps) => (
 				{label.toUpperCase()}
 			</label>
 		) : null}
-	</StyledFormInput>
+	</StyledCustomInput>
 )
 
 const mixinShrink = `
@@ -32,11 +37,11 @@ const mixinShrink = `
 	top: -1.4rem;
 `
 
-const StyledFormInput = styled.div`
+const StyledCustomInput = styled.div`
 	position: relative;
-	margin: var(--spacing-outer) 0;
+	margin: var(--gap-outer) 0;
 
-	.form-input {
+	.custom-input {
 		border-bottom: 0.1rem solid var(--color-border);
 		padding: 1rem 1rem 1rem 0.5rem;
 		color: var(--color-text-medium);
@@ -52,7 +57,7 @@ const StyledFormInput = styled.div`
 			outline: none;
 		}
 
-		&:focus ~ .form-input-label {
+		&:focus ~ .custom-input-label {
 			${mixinShrink};
 		}
 
@@ -77,4 +82,4 @@ const StyledFormInput = styled.div`
 	}
 `
 
-export default FormInput
+export default CustomInput

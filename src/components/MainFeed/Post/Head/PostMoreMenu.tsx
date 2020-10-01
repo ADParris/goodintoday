@@ -3,31 +3,38 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { selectModalState } from '../../../../redux/modal/selectors'
-
-import { deletePostStartAsync } from '../../../../redux/posts/actions'
 import { toggleModal } from '../../../../redux/modal/actions'
 
-import Editor from './Editor'
+import { deletePostStartAsync } from '../../../../redux/posts/actions'
 
-interface PMMProps {
-	postId: string
+import Composer from '../../../Shared/Composer'
+import Overlay from '../../../Shared/Overlay'
+
+type PMMProps = {
+	id: string
 }
 
-const PostMoreMenu = ({ postId }: PMMProps) => {
+const PostMoreMenu = ({ id }: PMMProps) => {
 	const isOpen = useSelector(selectModalState)
 	const dispatch = useDispatch()
+
+	const handleEdit = () => dispatch(toggleModal(window.scrollY / 10))
+
+	const handleDelete = () => dispatch(deletePostStartAsync(id))
 
 	return (
 		<StyledPostMoreMenu>
 			<li>
-				<div onClick={() => dispatch(toggleModal(window.scrollY / 10))}>
-					Edit
-				</div>
+				<div onClick={handleEdit}>Edit</div>
 			</li>
 			<li>
-				<div onClick={() => dispatch(deletePostStartAsync(postId))}>Delete</div>
+				<div onClick={handleDelete}>Delete</div>
 			</li>
-			{isOpen && <Editor postId={postId} />}
+			{isOpen && (
+				<Overlay>
+					<Composer from="feed" id={id} />
+				</Overlay>
+			)}
 		</StyledPostMoreMenu>
 	)
 }

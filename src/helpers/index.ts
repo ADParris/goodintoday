@@ -1,3 +1,5 @@
 import { preparePostForDatabase } from './processLinks'
+import { gifPaginator } from './processGifs/gifPaginator'
+import Observer from './observer'
 
-export { preparePostForDatabase }
+export { gifPaginator, Observer, preparePostForDatabase }

@@ -5,17 +5,12 @@ import Head from './Head'
 import Body from './Body'
 import Foot from './Foot'
 
-import { DisplayPost } from '../../../redux/posts/types'
-
-interface PostProps {
-	post: DisplayPost
-}
-
-const Post = ({ post }: PostProps) => {
+const Post = ({ post }: any) => {
+	// console.log(post)
 	return (
 		<StyledPost>
-			<Head post={post} />
-			<Body post={post} />
+			<Head {...post} />
+			<Body {...post} />
 			<Foot />
 		</StyledPost>
 	)
@@ -23,8 +18,8 @@ const Post = ({ post }: PostProps) => {
 
 const StyledPost = styled.div`
 	border: 0.1rem solid var(--color-border);
-	border-radius: var(--radius-border);
-	margin-bottom: var(--spacing-outer);
+	border-radius: var(--border-radius);
+	margin-bottom: var(--gap-outer);
 	background-color: white;
 	flex-direction: column;
 	display: flex;

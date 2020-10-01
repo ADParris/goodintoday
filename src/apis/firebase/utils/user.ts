@@ -10,18 +10,22 @@ export const createUserProfileDocument = async (
 	if (!userAuth) return
 
 	const userRef = firestore.doc(`users/${userAuth.uid}`)
-	const snapShot = await userRef.get()
+	const snapshot = await userRef.get()
 
-	if (!snapShot.exists) {
+	if (!snapshot.exists) {
 		let { displayName, email, photoURL } = userAuth
 		if (!photoURL) photoURL = Silhouette
 
 		try {
 			await userRef.set({
-				createdAt: new Date(),
-				displayName,
 				email,
-				photoURL,
+				image: photoURL,
+				name: {
+					first: displayName?.split(' ')[0],
+					full: displayName,
+				},
+				profile: `/${displayName?.split(' ').join('').toLowerCase()}`,
+				createdAt: Date.now(),
 				...additionalData,
 			})
 		} catch (err) {

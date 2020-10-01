@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import CustomButton from '../Shared/CustomButton'
-import FormInput from '../Shared/FormInput'
+import CustomInput from '../Shared/CustomInput'
 
 import { auth, signInWithGoogle } from '../../apis/firebase'
 
@@ -37,7 +37,7 @@ const SignIn = () => {
 			<h2 className="title">I already have an account...</h2>
 			<span>Sign in with your email and password.</span>
 			<form onSubmit={() => handleSubmit}>
-				<FormInput
+				<CustomInput
 					label="email"
 					name="email"
 					type="email"
@@ -45,7 +45,7 @@ const SignIn = () => {
 					handleChange={handleChange}
 					required
 				/>
-				<FormInput
+				<CustomInput
 					label="password"
 					name="password"
 					type="password"

@@ -3,83 +3,52 @@ import styled from 'styled-components'
 
 import { DisplayPost } from '../../../../redux/posts/types'
 
-interface PostBodyProps {
-	post: DisplayPost
+import GifDisplay from '../../../Shared/Displays/GifDisplay'
+import ImageDisplay from '../../../Shared/Displays/ImageDisplay'
+import TextDisplay from '../../../Shared/Displays/TextDisplay'
+import VideoDisplay from '../../../Shared/Displays/VideoDisplay'
+
+type IsBackground = {
+	background: string | null
 }
 
+type IsText = {
+	isText: boolean
+}
+
+type StyleProps = IsBackground & IsText
+
 const PostBody = ({
-	post: {
-		content: { image, text, video },
-		userInfo: { name },
-	},
-}: PostBodyProps) => {
-	const videoDisplay = () => {
-		return video ? (
-			<a
-				className="video-container"
-				href={video.link}
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				<img src={video.image} alt={video.title} />
-				<div className="video-meta">
-					<div>{video.site}</div>
-					<h5>{video.title}</h5>
-				</div>
-			</a>
-		) : null
+	background,
+	content: { gif, image, text, video },
+	user: { name },
+}: DisplayPost) => {
+	const textProps = {
+		other:
+			background === 'transparent' || gif?.link || image || video?.link
+				? true
+				: false,
+		background:
+			background === 'transparent' || background === null ? false : true,
 	}
 
 	return (
-		<StyledPostBody>
-			<p className="post post-text">{text}</p>
-			{image && <img src={image} alt={`Shared by ${name}`} />}
-			{video && videoDisplay()}
+		<StyledPostBody background={background} isText={!!text}>
+			{text && <TextDisplay text={text} textProps={textProps} />}
+			{gif && gif.link && <GifDisplay {...gif} />}
+			{image && <ImageDisplay src={image} alt={`Shared by ${name}`} />}
+			{video && video.link && <VideoDisplay {...video} />}
 		</StyledPostBody>
 	)
 }
 
 const StyledPostBody = styled.div`
-	p {
-		padding: var(--gap-outer);
-	}
-
-	img {
-		border-bottom: 0.1rem solid var(--color-border);
-		border-top: 0.1rem solid var(--color-border);
-		max-width: 49.8rem;
-	}
-	.video-container {
-		background-color: var(--color-form-background);
-		flex-direction: column;
-		display: flex;
-
-		.video-meta {
-			border-bottom: 0.1rem solid var(--color-border);
-			padding: var(--gap-outer);
-
-			div {
-				color: var(--color-text-lighter);
-				line-height: 1.1rem;
-				font-size: 1.2rem;
-			}
-
-			h5 {
-				margin: var(--gap-inner) 0;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				line-height: 2rem;
-				font-size: 1.6rem;
-				overflow: hidden;
-			}
-		}
-
-		&:hover {
-			.video-meta {
-				background-color: rgba(29, 33, 41, 0.04);
-			}
-		}
-	}
+	background: ${(props: IsBackground) =>
+		props.background ? props.background : 'transparent'};
+	margin-top: ${(props: StyleProps) =>
+		props.isText && !props.background ? 0 : 1.2}rem;
+	min-height: ${(props: IsBackground) =>
+		props.background ? '27rem' : 'initial'};
 `
 
 export default PostBody

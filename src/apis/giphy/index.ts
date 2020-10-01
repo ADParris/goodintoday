@@ -4,21 +4,8 @@ import { GiphyFetch } from '@giphy/js-fetch-api'
 
 const gf = new GiphyFetch(keys.GIPHY_API_KEY)
 
-export const getTrendingGifs = (offset: number) => {
-	return gf.trending({ offset, limit: 10 }).then(({ data }) => {
-		const gifLinks = data.map((g: any) => ({
-			id: g.id,
-			gif: `https://i.giphy.com/${g.id}.gif`,
-			title: g.title || null,
-			user:
-				{
-					name: g.user?.display_name || null,
-				} || null,
-		}))
-		return gifLinks
-	})
-}
-
-export const searchGifs = (query: string) => {
+export const fetchGifs = (offset: number, query?: string) => {
 	return query
+		? gf.search(query, { offset, limit: 25 })
+		: gf.trending({ offset, limit: 25 })
 }

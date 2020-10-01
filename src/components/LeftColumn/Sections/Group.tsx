@@ -3,14 +3,15 @@ import styled from 'styled-components'
 
 import Item from './Item'
 
-interface Item {
+type Item = {
 	icon: string
+	internal: boolean
 	link: string
-	title: string
+	name: string
 }
 
 type GroupProps = {
-	items: Item[]
+	items?: Item[]
 	title?: string
 }
 
@@ -18,7 +19,7 @@ const Group = ({ items, title }: GroupProps) => (
 	<StyledGroup>
 		{title ? <h4>{title}</h4> : null}
 		<ul>
-			{items.map((item, index) => (
+			{items?.map((item, index) => (
 				<Item key={index} item={item} />
 			))}
 		</ul>

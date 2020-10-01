@@ -13,10 +13,14 @@ export default createGlobalStyle`
 
     body {
       background-color: var(--color-background);
+      font-family: Helvetica, Arial, sans-serif;
       color: var(--color-text-darker);
-      font-family: sans-serif;
       font-size: 1.6rem;
       height: 100%;
+
+      textarea {
+        font-family: inherit;
+      }
 
       input {
         outline: none;

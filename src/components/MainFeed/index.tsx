@@ -7,7 +7,7 @@ import Post from './Post'
 
 import { retrievePostsStartAsync } from '../../redux/posts/actions'
 import { selectCurrentPosts } from '../../redux/posts/selectors'
-import { DisplayPost } from '../../redux/posts/types'
+import { Post as IPost } from '../../redux/posts/types'
 
 interface Props {
 	from: string
@@ -30,9 +30,7 @@ const MainFeed = ({ from, width }: Props) => {
 		<StyledMainFeed width={width}>
 			<Composer from={from} />
 			{posts &&
-				(posts as DisplayPost[]).map(post => (
-					<Post key={post.id} post={post} />
-				))}
+				(posts as IPost[]).map(post => <Post key={post.id} post={post} />)}
 		</StyledMainFeed>
 	)
 }

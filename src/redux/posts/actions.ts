@@ -1,11 +1,5 @@
 import { Dispatch } from 'redux'
-import {
-	firestore,
-	preparePostForDatabase,
-	retrievePostsForState,
-} from '../../apis/firebase'
-
-import { toggleModal } from '../modal/actions'
+import { firestore, retrievePostsForState } from '../../apis/firebase'
 
 import { AppThunk } from '../store.types'
 import {
@@ -58,7 +52,7 @@ export const retrievePostsStartAsync = (): AppThunk => (dispatch: Dispatch) => {
 	dispatch(processingStart())
 
 	retrievePostsForState()
-		.then((prepairedPosts: Post[]) => {
+		.then((prepairedPosts: any) => {
 			dispatch(retrievePostsSuccess(prepairedPosts))
 		})
 		.catch(error =>
@@ -73,11 +67,9 @@ export const updatePostStartAsync = (post: Post): AppThunk => (
 	const postRef = firestore.collection('posts').doc(post.id)
 	dispatch(processingStart())
 
-	const preparedPost = preparePostForDatabase(post)
 	postRef
-		.update(preparedPost)
+		.update(post)
 		.then(() => dispatch(processingComplete()))
-		.then(() => dispatch(toggleModal()))
 		.then(() => dispatch(retrievePostsStartAsync() as any))
 		.catch(error =>
 			dispatch(processingError({ from: 'update', msg: error.message }))

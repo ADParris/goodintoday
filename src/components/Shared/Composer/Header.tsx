@@ -50,7 +50,7 @@ const ComposerHeader = ({ options }: ComposerHeaderProps) => {
 			dispatch(isEditing(false))
 		}
 		dispatch(isOpen(false))
-		dispatch(prepostItem('reset'))
+		dispatch(prepostItem('composer', 'reset'))
 	}
 
 	return (

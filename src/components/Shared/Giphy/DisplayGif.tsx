@@ -7,14 +7,18 @@ import { isOpen } from '../../../redux/composer/actions'
 import { toggleMenu } from '../../../redux/menu/actions'
 import { PostGif } from '../../../redux/posts/types'
 
-const DisplayGif = ({ link, source, title }: PostGif) => {
+interface Props extends PostGif {
+	postId: string
+}
+
+const DisplayGif = ({ image, link, postId, site, title }: Props) => {
 	const dispatch = useDispatch()
 
 	const handleClick = () => {
 		dispatch(
-			prepostItem({
-				gif: { link, source, title },
-			})
+			prepostItem(postId, {
+				gif: { image, link, site, title },
+			} as any)
 		)
 		dispatch(toggleMenu(''))
 		dispatch(isOpen(true))
@@ -22,7 +26,7 @@ const DisplayGif = ({ link, source, title }: PostGif) => {
 
 	return (
 		<StyledDisplayGif onClick={handleClick}>
-			<img src={link!} alt={title!} />
+			<img src={image} alt={title} />
 		</StyledDisplayGif>
 	)
 }

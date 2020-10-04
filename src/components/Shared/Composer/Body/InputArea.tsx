@@ -19,7 +19,7 @@ type InputAreaProps = {
 		first?: string
 		full?: string
 	}
-	postText?: string
+	postText?: string | null
 }
 
 type StyleProps = {
@@ -71,7 +71,7 @@ const ComposerBodyInputArea = ({
 					placeholder={`What's on your mind, ${name && name.first}?`}
 					onChange={handleTextChange}
 					onFocus={handleFocus}
-					value={postText}
+					value={postText!}
 				></textarea>
 			</div>
 			{composerIsOpen && (
@@ -80,7 +80,7 @@ const ComposerBodyInputArea = ({
 						<Backgrounds setBackground={handleBgChange} />
 					</div>
 					<div className="post-options-emojis">
-						<Emojis addEmoji={addEmoji} />
+						<Emojis addEmoji={addEmoji} id="composer-emojis" />
 					</div>
 				</div>
 			)}
@@ -147,28 +147,6 @@ const StyledComposerBodyInputArea = styled.div`
 		&-backgrounds {
 			height: 2.6rem;
 			width: 2.6rem;
-		}
-		&-emojis {
-			.menu-frame-outer {
-				.menu-frame-inner {
-					ul {
-						display: inherit;
-
-						li {
-							padding: inherit;
-
-							button {
-								padding: var(--gap-inner);
-								outline: none;
-							}
-
-							&:hover {
-								background: none;
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 `

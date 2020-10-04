@@ -31,70 +31,78 @@ export type ProcessingActionTypes =
 // Gif Actions...
 export const GIF = 'GIF'
 
-type PrepostGif = {
-	gif?: {
-		link: string | null
-		title: string | null
-		source: {
-			site: string | null
-			url?: string | null
-			user?: {
-				name?: string | null
-			} | null
-		}
+export interface PrepostGif {
+	gif: {
+		image: string
+		link: string
+		site: string
+		title: string
 	} | null
 }
 
 interface PrepostGifAction {
 	type: typeof GIF
-	payload: PrepostGif | null
+	payload: {
+		id: string
+		item: PrepostGif | null
+	}
 }
 
 // Images Actions...
 export const IMAGE = 'IMAGE'
 
 type PrepostImage = {
-	image?: string | null
-}
+	image: string | null
+} | null
 
 interface PrepostImageAction {
 	type: typeof IMAGE
-	payload: PrepostImage | null
+	payload: {
+		id: string
+		item: PrepostImage | null
+	}
 }
 
 // Text Actions...
 export const TEXT = 'TEXT'
 
 type PrepostText = {
-	text?: string | null
-}
+	text: string | null
+} | null
 
 interface PrepostTextAction {
 	type: typeof TEXT
-	payload: PrepostText | null
+	payload: {
+		id: string
+		item: PrepostText | null
+	}
 }
 
 // Videos Actions...
 export const VIDEO = 'VIDEO'
 
-type PrepostVideo = {
-	video?: {
-		image: string | null
-		link: string | null
-		site: string | null
-		title: string | null
+interface PrepostVideo {
+	video: {
+		image: string
+		link: string
+		site: string
+		title: string
 	} | null
 }
 
 interface PrepostVideoAction {
 	type: typeof VIDEO
-	payload: PrepostVideo | null
+	payload: {
+		id: string
+		item: PrepostVideo | null
+	}
 }
 
 export interface PrepostState {
 	prepost: {
 		gif: PrepostGif | null
-		image: PrepostImage | null
+		id: string | null
+		image: string | null
 		text: string | null
 		video: PrepostVideo | null
 	}

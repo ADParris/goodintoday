@@ -8,10 +8,10 @@ import MoreMenu from '../MoreMenu'
 
 import EmojiIcon from './Button'
 
-const Emojis = ({ addEmoji }: any) => {
+const Emojis = ({ addEmoji, id }: any) => {
 	return (
 		<StyledEmojis>
-			<MoreMenu id="emojis" MenuIcon={EmojiIcon} top={4}>
+			<MoreMenu id={id} MenuIcon={EmojiIcon} top={4}>
 				<Picker
 					set="facebook"
 					showPreview={false}
@@ -23,6 +23,27 @@ const Emojis = ({ addEmoji }: any) => {
 	)
 }
 
-const StyledEmojis = styled.div``
+const StyledEmojis = styled.div`
+	.menu-frame-outer {
+		.menu-frame-inner {
+			ul {
+				display: inherit;
+
+				li {
+					padding: inherit;
+
+					button {
+						padding: var(--gap-inner);
+						outline: none;
+					}
+
+					&:hover {
+						background: none;
+					}
+				}
+			}
+		}
+	}
+`
 
 export default Emojis

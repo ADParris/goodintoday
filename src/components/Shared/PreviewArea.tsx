@@ -1,16 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import GifDisplay from '../../Displays/GifDisplay'
-import ImageDisplay from '../../Displays/ImageDisplay'
-import VideoDisplay from '../../Displays/VideoDisplay'
+import GifDisplay from './Displays/GifDisplay'
+import ImageDisplay from './Displays/ImageDisplay'
+import VideoDisplay from './Displays/VideoDisplay'
 
 type PreviewAreaProps = {
 	prepostData?: any
 }
 
-const ComposerBodyPreviewArea = ({ prepostData }: PreviewAreaProps) => (
-	<StyledComposerBodyPreviewArea>
+const PreviewArea = ({ prepostData }: PreviewAreaProps) => (
+	<StyledPreviewArea>
 		{prepostData.gif && Object.keys(prepostData.gif).length !== 0 && (
 			<GifDisplay {...prepostData.gif} />
 		)}
@@ -20,9 +20,9 @@ const ComposerBodyPreviewArea = ({ prepostData }: PreviewAreaProps) => (
 		{prepostData.video && Object.keys(prepostData.video).length !== 0 && (
 			<VideoDisplay {...prepostData.video} />
 		)}
-	</StyledComposerBodyPreviewArea>
+	</StyledPreviewArea>
 )
 
-const StyledComposerBodyPreviewArea = styled.div``
+const StyledPreviewArea = styled.div``
 
-export default ComposerBodyPreviewArea
+export default PreviewArea

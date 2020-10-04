@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux'
 import { selectComposerIsOpen } from '../../../../redux/composer/selectors'
 
 import InputArea from './InputArea'
-import PreviewArea from './PreviewArea'
+import PreviewArea from '../../PreviewArea'
 import OptionsArea from './OptionsArea'
 
-type ComposerBodyProps = {
+interface ComposerBodyProps {
 	background: string
 	setBackground: any
 	handleFocus: any
@@ -18,13 +18,13 @@ type ComposerBodyProps = {
 		first?: string
 		full?: string
 	}
-	postText?: string
+	postText?: string | null
 	prepostData?: any
 	setSubmission: any
 	submission: string
 }
 
-type IsOpen = {
+interface IsOpen {
 	isOpen: boolean
 }
 
@@ -53,7 +53,7 @@ const ComposerBody = ({
 				name={name}
 				postText={postText}
 			/>
-			<PreviewArea prepostData={prepostData} />
+			{prepostData && <PreviewArea prepostData={prepostData} />}
 			<OptionsArea setSubmission={setSubmission} submission={submission} />
 		</StyledComposerBody>
 	)

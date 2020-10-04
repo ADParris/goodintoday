@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { prepareSubmissionForPrepost } from '../../../../helpers/processLinks'
 
 import { prepostItem } from '../../../../redux/prepost/actions'
-import { PrepostItem } from '../../../../redux/prepost/types'
 
 import { selectMenuState } from '../../../../redux/menu/selectors'
 import { toggleMenu } from '../../../../redux/menu/actions'
@@ -62,7 +61,7 @@ const ComposerBodyOptionsArea = ({
 	const handleSubmission = async () => {
 		if (!submission) return
 		const result = await prepareSubmissionForPrepost(submission)
-		result && dispatch(prepostItem(result as PrepostItem))
+		result && dispatch(prepostItem('composer', result as any))
 		setSubmission('')
 		dispatch(toggleMenu(''))
 		dispatch(isOpen(true))
@@ -102,7 +101,7 @@ const ComposerBodyOptionsArea = ({
 					</div>
 				</li>
 				<li>
-					<Giphy />
+					<Giphy from="post" id="composer" />
 				</li>
 				<li>
 					<Ellipsis />

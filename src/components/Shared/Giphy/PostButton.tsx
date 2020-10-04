@@ -3,16 +3,16 @@ import styled from 'styled-components'
 
 import GiphyIcon from '../../../assets/giphy-logo-spin.gif'
 
-const GiphyButton = () => (
-	<StyledGiphyButton>
+const PostGiphyButton = () => (
+	<StyledPostGiphyButton>
 		<span className="giphy-logo">
 			<img src={GiphyIcon} alt="Giphy Logo" />
 		</span>
 		<span className="button-text">GIF</span>
-	</StyledGiphyButton>
+	</StyledPostGiphyButton>
 )
 
-const StyledGiphyButton = styled.div`
+const StyledPostGiphyButton = styled.div`
 	align-items: center;
 	display: flex;
 
@@ -32,4 +32,4 @@ const StyledGiphyButton = styled.div`
 	}
 `
 
-export default GiphyButton
+export default PostGiphyButton

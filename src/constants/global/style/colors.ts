@@ -17,5 +17,6 @@ export default createGlobalStyle`
     --color-border: #dddfe2;
 
     --color-form-background: #f2f3f5;
+    --color-form-border: #ccd0d5;
   }
 `

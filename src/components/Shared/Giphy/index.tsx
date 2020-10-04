@@ -10,7 +10,8 @@ import GiphySearch from './Search'
 
 import MoreMenu from '../MoreMenu'
 
-import MenuIcon from './Button'
+import PostButton from './PostButton'
+import CommentButton from './CommentButton'
 
 import DisplayGif from './DisplayGif'
 
@@ -18,7 +19,12 @@ interface PostGifWithId extends PostGif {
 	id: string | number
 }
 
-const Giphy = () => {
+interface Props {
+	from: string
+	id: string
+}
+
+const Giphy = ({ from, id }: Props) => {
 	const [gifs, setGifs] = React.useState<PostGif[]>([])
 	const [isDoneFetching, setIsDoneFetching] = React.useState(false)
 	const [isFetching, setIsFetching] = React.useState(false)
@@ -72,7 +78,12 @@ const Giphy = () => {
 
 	return (
 		<StyledGiphy>
-			<MoreMenu id="giphy" MenuIcon={MenuIcon} top={3.5} reset={handleReset}>
+			<MoreMenu
+				id={id}
+				MenuIcon={from === 'post' ? PostButton : CommentButton}
+				top={3.5}
+				reset={handleReset}
+			>
 				<div className="giphy">
 					<GiphySearch
 						handleChange={handleChange}
@@ -82,7 +93,7 @@ const Giphy = () => {
 					<div className="giphy-list">
 						{gifs &&
 							gifs.map((gif: any) => {
-								return <DisplayGif key={gif.id} {...gif} />
+								return <DisplayGif key={gif.id} {...gif} postId={id} />
 							})}
 						{/* {!showLoader && retrievedGifs.length === 0 && noResultsMessage} */}
 						{showLoader && (
@@ -98,6 +109,9 @@ const Giphy = () => {
 }
 
 const StyledGiphy = styled.div`
+	justify-content: center;
+	align-items: center;
+	display: flex;
 	height: 100%;
 	width: 100%;
 

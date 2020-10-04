@@ -5,16 +5,18 @@ import { PostGif } from '../../../redux/posts/types'
 
 import OffsiteIcon from '../../../assets/open-new-tab.png'
 
-const GifDisplay = ({ link, title, source: { site, url } }: PostGif) => {
+const GifDisplay = ({ image, link, site, title }: PostGif) => {
 	return (
 		<StyledGifDisplay>
-			<img className="giphy-gif" src={link!} alt={title!} />
+			<img className="giphy-gif" src={image} alt={title} />
 			<div>
 				<span className="site-name">
-					<a href={url!}>{site}</a>
+					<a href={link} target="_blank" rel="noopener noreferrer">
+						{site}
+					</a>
 				</span>
 				<span className="offsite-icon">
-					<a href={url!}>
+					<a href={link} target="_blank" rel="noopener noreferrer">
 						<img src={OffsiteIcon} alt="offsite" />
 					</a>
 				</span>
@@ -29,8 +31,10 @@ const StyledGifDisplay = styled.div`
 	flex-direction: column;
 	position: relative;
 	display: flex;
+	height: 100%;
 
 	.giphy-gif {
+		object-fit: contain;
 		width: 100%;
 	}
 

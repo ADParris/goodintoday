@@ -5,9 +5,15 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline'
 import NearMeOutlinedIcon from '@material-ui/icons/NearMeOutlined'
 
+import { Post } from '../../../../redux/posts/types'
+
 import Comments from './Comments'
 
-const PostFooter = () => (
+interface Props {
+	post: Post
+}
+
+const PostFooter = ({ post }: Props) => (
 	<StyledPostFooter>
 		<div className="post-original-details"></div>
 		<div className="post-options">
@@ -24,7 +30,7 @@ const PostFooter = () => (
 				Share
 			</span>
 		</div>
-		<Comments />
+		<Comments post={post} />
 	</StyledPostFooter>
 )
 

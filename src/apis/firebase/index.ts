@@ -1,5 +1,5 @@
 import firebase, { auth, firestore, signInWithGoogle } from './config'
-import { preparePostForDatabase, retrievePostsForState } from './utils/posts'
+import { retrievePostsForState } from './utils/posts'
 import { createUserProfileDocument } from './utils/user'
 
 export {
@@ -8,6 +8,5 @@ export {
 	firestore,
 	signInWithGoogle,
 	retrievePostsForState,
-	preparePostForDatabase,
 	createUserProfileDocument,
 }

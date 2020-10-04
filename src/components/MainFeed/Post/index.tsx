@@ -5,16 +5,13 @@ import Head from './Head'
 import Body from './Body'
 import Foot from './Foot'
 
-const Post = ({ post }: any) => {
-	// console.log(post)
-	return (
-		<StyledPost>
-			<Head {...post} />
-			<Body {...post} />
-			<Foot />
-		</StyledPost>
-	)
-}
+const Post = ({ post }: any) => (
+	<StyledPost>
+		<Head {...post} />
+		<Body {...post} />
+		<Foot post={post} />
+	</StyledPost>
+)
 
 const StyledPost = styled.div`
 	border: 0.1rem solid var(--color-border);

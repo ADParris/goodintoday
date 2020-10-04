@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { DisplayPost } from '../../../../redux/posts/types'
+import { Post } from '../../../../redux/posts/types'
 
 import GifDisplay from '../../../Shared/Displays/GifDisplay'
 import ImageDisplay from '../../../Shared/Displays/ImageDisplay'
@@ -9,7 +9,7 @@ import TextDisplay from '../../../Shared/Displays/TextDisplay'
 import VideoDisplay from '../../../Shared/Displays/VideoDisplay'
 
 type IsBackground = {
-	background: string | null
+	background?: string | null
 }
 
 type IsText = {
@@ -19,13 +19,16 @@ type IsText = {
 type StyleProps = IsBackground & IsText
 
 const PostBody = ({
-	background,
-	content: { gif, image, text, video },
+	background = 'transparent',
+	gif,
+	image,
+	text,
+	video,
 	user: { name },
-}: DisplayPost) => {
+}: Post) => {
 	const textProps = {
 		other:
-			background === 'transparent' || gif?.link || image || video?.link
+			background === 'transparent' || gif?.image || image || video?.image
 				? true
 				: false,
 		background:
@@ -35,9 +38,9 @@ const PostBody = ({
 	return (
 		<StyledPostBody background={background} isText={!!text}>
 			{text && <TextDisplay text={text} textProps={textProps} />}
-			{gif && gif.link && <GifDisplay {...gif} />}
+			{gif && gif.image && <GifDisplay {...gif} />}
 			{image && <ImageDisplay src={image} alt={`Shared by ${name}`} />}
-			{video && video.link && <VideoDisplay {...video} />}
+			{video && video.image && <VideoDisplay {...video} />}
 		</StyledPostBody>
 	)
 }

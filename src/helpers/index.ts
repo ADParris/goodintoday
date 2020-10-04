@@ -1,5 +1,5 @@
-import { preparePostForDatabase } from './processLinks'
 import { gifPaginator } from './processGifs/gifPaginator'
 import Observer from './observer'
+import { createComment, createPost, editPost } from './handlePost'
 
-export { gifPaginator, Observer, preparePostForDatabase }
+export { createComment, createPost, editPost, gifPaginator, Observer }

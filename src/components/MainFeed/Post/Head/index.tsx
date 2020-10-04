@@ -7,18 +7,18 @@ import { ReactComponent as MenuIcon } from '../../../../assets/menu-icon.svg'
 import MoreMenu from '../../../Shared/MoreMenu'
 import PostMoreMenu from './PostMoreMenu'
 
-import { DisplayPost } from '../../../../redux/posts/types'
+import { Post } from '../../../../redux/posts/types'
 
-const PostHeader = ({ id, createdAt, updatedAt, user }: DisplayPost) => (
+const PostHeader = ({ id, createdAt, updatedAt, user }: Post) => (
 	<StyledPostHeader>
 		<div className="post-header">
 			<Link to={user.profile}>
-				<img src={user.image} alt={user.name.full} />
+				<img src={user.image} alt={user.name} />
 			</Link>
 			<div className="post-inner-container">
 				<div className="post-inner">
 					<h5>
-						<Link to={user.profile}>{user.name.full}</Link>
+						<Link to={user.profile}>{user.name}</Link>
 					</h5>
 					<div className="post-header-meta">
 						<span className="post-time">

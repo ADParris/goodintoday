@@ -2,22 +2,24 @@ import { PrepostItem, GIF, IMAGE, TEXT, VIDEO } from './types'
 import { AppThunk } from '../store.types'
 
 export const prepostItem = (
-	item: PrepostItem | (PrepostItem & string)
+	id: string,
+	item: PrepostItem | string
 ): AppThunk => dispatch => {
 	if (item === 'reset') {
-		item = { gif: null, image: '', text: '', video: null }
+		item = { gif: null, image: null, text: null, video: null }
 	}
 
-	Object.keys(item as PrepostItem).forEach(key => {
+	const { gif, image, text, video } = item as PrepostItem
+	Object.keys(item).forEach(key => {
 		switch (key.toUpperCase()) {
 			case GIF:
-				return dispatch({ type: GIF, payload: item && item.gif })
+				return dispatch({ type: GIF, payload: gif && { id, item: gif } })
 			case IMAGE:
-				return dispatch({ type: IMAGE, payload: item && item.image })
+				return dispatch({ type: IMAGE, payload: image && { id, item: image } })
 			case TEXT:
-				return dispatch({ type: TEXT, payload: item && item.text })
+				return dispatch({ type: TEXT, payload: text && { id, item: text } })
 			case VIDEO:
-				return dispatch({ type: VIDEO, payload: item && item.video })
+				return dispatch({ type: VIDEO, payload: video && { id, item: video } })
 			default:
 				return
 		}

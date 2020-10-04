@@ -7,6 +7,57 @@ export const PROCESSING_ERROR = 'PROCESSING_ERROR'
 export const RETRIEVE_POSTS_SUCCESS = 'RETRIEVE_POSTS_SUCCESS'
 
 // Interfaces...
+export interface PostComment {
+	createdAt: number
+	gif?: PostGif | null
+	image?: string | null
+	interactions?: PostInteractions[] | null
+	replies?: PostCommentReplies | null
+	text?: string | null
+	updatedAt?: number | null
+	user: PostUser
+	video?: PostVideo | null
+}
+
+export type PostComments = {
+	id: string
+	comment: PostComment
+}[]
+
+export interface PostCommentReplies {
+	id: PostCommentReply
+}
+
+export interface PostCommentReply {
+	createdAt: number
+	gif?: PostGif | null
+	image?: string | null
+	interactions?: PostInteractions[] | null
+	text?: string | null
+	updatedAt?: number | null
+	user: PostUser
+	video?: PostVideo | null
+}
+
+export interface PostGif {
+	image: string
+	link: string
+	site: string
+	title: string
+}
+
+export interface PostInteractions {
+	type: string
+	uid: string
+}
+
+export interface PostUser {
+	id: string
+	image: string
+	name: string
+	profile: string
+}
+
 export interface PostVideo {
 	image: string | null
 	link: string | null
@@ -14,69 +65,19 @@ export interface PostVideo {
 	title: string | null
 }
 
-export interface PostGif {
-	link: string | null
-	title: string | null
-	source: {
-		site: string | null
-		url?: string | null
-		user?: {
-			name?: string | null
-		} | null
-	}
-}
-
-export interface PostContent {
-	gif?: PostGif | null
-	image?: string | null
-	text: string | null
-	video?: PostVideo | null
-}
-
 export interface Post {
-	background: string | null
-	content: PostContent
+	background?: string | null
+	comments?: PostComments | null
 	createdAt: number
+	gif?: PostGif | null
 	id?: string
-	uid?: string
-	updatedAt: number | null
-}
-
-export interface DisplayPost {
-	background: string | null
-	content: {
-		gif?: {
-			link: string | null
-			title: string | null
-			source: {
-				site: string | null
-				user?: {
-					name?: string | null
-				} | null
-			}
-		} | null
-		image?: string | null
-		text?: string | null
-		video?: {
-			image: string | null
-			link: string | null
-			site: string | null
-			title: string | null
-		} | null
-	}
-	createdAt: number
-	id?: string
-	uid?: string
-	updatedAt: number | null
-	user: {
-		id: string
-		image: string
-		name: {
-			first: string
-			full: string
-		}
-		profile: string
-	}
+	image?: string | null
+	interactions?: PostInteractions[] | null
+	shares?: string[] | null
+	text?: string | null
+	updatedAt?: number | null
+	user: PostUser
+	video?: PostVideo | null
 }
 
 export interface PostErrMsg {
@@ -88,7 +89,7 @@ export interface PostState {
 	posts: {
 		errMsg: string | null
 		isProcessing: boolean
-		posts: DisplayPost[] | []
+		posts: Post[] | []
 	}
 }
 

@@ -13,10 +13,12 @@ import { prepostItem } from '../../../redux/prepost/actions'
 import { selectComposerState } from '../../../redux/composer/selectors'
 import { isOpen, isEditing } from '../../../redux/composer/actions'
 
-import { DisplayPost, Post } from '../../../redux/posts/types'
+import { Post } from '../../../redux/posts/types'
 import { selectPostById } from '../../../redux/posts/selectors'
 
 import { selectUser } from '../../../redux/user/selectors'
+
+import { createPost, editPost } from '../../../helpers'
 
 import ComposerHeader from './Header'
 import ComposerBody from './Body'
@@ -37,12 +39,14 @@ const Composer = ({ from, id = 'none' }: ComposerProps) => {
 	const [postText, setPostText] = React.useState('')
 	const [submission, setSubmission] = React.useState('')
 	const [background, setBackground] = React.useState('transparent')
-	const [loadedPost, setLoadedPost] = React.useState<DisplayPost | null>(null)
+	const [loadedPost, setLoadedPost] = React.useState<Post | null>(null)
 
 	const user = useSelector(selectUser)
 	const post = useSelector(selectPostById(id as string))[0]
-	const prepostData = useSelector(selectPrepostData)
 	const composerState = useSelector(selectComposerState)
+
+	const prepostData = useSelector(selectPrepostData)
+	const data = prepostData.id === 'composer' ? prepostData : null
 
 	const dispatch = useDispatch()
 
@@ -56,7 +60,7 @@ const Composer = ({ from, id = 'none' }: ComposerProps) => {
 	}
 
 	const loadTextFromPost = () => {
-		loadedPost && setPostText(loadedPost.content.text!)
+		loadedPost && setPostText(loadedPost.text!)
 	}
 
 	if (!loadedPost) loadPost()
@@ -73,33 +77,32 @@ const Composer = ({ from, id = 'none' }: ComposerProps) => {
 	const handleSubmit = async () => {
 		// If this is an edited Post then let's update it...
 		if (composerState.isEditing) {
-			const editedPost = loadedPost && {
-				...loadedPost,
-				content: { ...loadedPost.content, text: postText },
-				updatedAt: Date.now(),
-			}
+			const editedPost = editPost({
+				post,
+				text: postText,
+			})
 			dispatch(isEditing(false))
 			dispatch(isOpen(false))
-			return editedPost && dispatch(updatePostStartAsync(editedPost))
+			return editedPost && dispatch(updatePostStartAsync(editedPost as Post))
 		}
 
 		// If this is a new Post then let's prep it and then save it...
-		const newPost = {
-			uid: user!.id,
-			background: background || null,
-			content: {
-				gif: prepostData.gif || null,
-				image: prepostData.image || null,
-				text: postText || null,
-				video: prepostData.video || null,
+
+		const newPost: Post = createPost({
+			background,
+			prepost: data as Post,
+			text: postText,
+			user: {
+				id: user!.id,
+				image: user!.image,
+				name: user!.name.full,
+				profile: user!.profile,
 			},
-			createdAt: Date.now(),
-			updatedAt: null,
-		} as Post
+		})
 
 		dispatch(createPostStartAsync(newPost))
 		setPostText('')
-		dispatch(prepostItem('reset'))
+		dispatch(prepostItem('composer', 'reset'))
 		dispatch(isOpen(false))
 	}
 
@@ -114,7 +117,7 @@ const Composer = ({ from, id = 'none' }: ComposerProps) => {
 				image={user!.image}
 				name={from === 'feed' ? user!.name : undefined}
 				postText={postText}
-				prepostData={prepostData}
+				prepostData={data}
 				submission={submission}
 				setSubmission={setSubmission}
 			/>

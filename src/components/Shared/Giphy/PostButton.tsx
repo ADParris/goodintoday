@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import GiphyIcon from '../../../assets/giphy-logo-spin.gif'
+import GiphyIcon from './assets/giphy-logo.gif'
 
 const PostGiphyButton = () => (
 	<StyledPostGiphyButton>

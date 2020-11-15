@@ -1,17 +1,25 @@
-// Processing Actions...
-export const PROCESSING_START = 'PROCESSING_START'
-export const PROCESSING_COMPLETE = 'PROCESSING_COMPLETE'
-export const PROCESSING_ERROR = 'PROCESSING_ERROR'
-
 // Retrieve Actions...
-export const RETRIEVE_POSTS_SUCCESS = 'RETRIEVE_POSTS_SUCCESS'
+export const POSTS = {
+	CREATE: 'CREATE',
+	RETRIEVE: 'RETRIEVE',
+	UPDATE: 'UPDATE',
+	DELETE: 'DELETE',
+}
 
 // Interfaces...
+export interface PostState {
+	posts: Post[]
+}
+
+export interface PostComments {
+	[id: string]: PostComment
+}
+
 export interface PostComment {
 	createdAt: number
 	gif?: PostGif | null
 	image?: string | null
-	interactions?: PostInteractions[] | null
+	reactions?: PostReaction[] | null
 	replies?: PostCommentReplies | null
 	text?: string | null
 	updatedAt?: number | null
@@ -19,20 +27,15 @@ export interface PostComment {
 	video?: PostVideo | null
 }
 
-export type PostComments = {
-	id: string
-	comment: PostComment
-}[]
-
 export interface PostCommentReplies {
-	id: PostCommentReply
+	[id: string]: PostCommentReply
 }
 
 export interface PostCommentReply {
 	createdAt: number
 	gif?: PostGif | null
 	image?: string | null
-	interactions?: PostInteractions[] | null
+	reactions?: PostReaction[] | null
 	text?: string | null
 	updatedAt?: number | null
 	user: PostUser
@@ -46,9 +49,13 @@ export interface PostGif {
 	title: string
 }
 
-export interface PostInteractions {
+export interface PostReaction {
+	id: string
 	type: string
-	uid: string
+	user: {
+		name: string
+		profile: string
+	}
 }
 
 export interface PostUser {
@@ -59,62 +66,54 @@ export interface PostUser {
 }
 
 export interface PostVideo {
-	image: string | null
-	link: string | null
-	site: string | null
-	title: string | null
+	image: string
+	link: string
+	site: string
+	title: string
 }
 
 export interface Post {
-	background?: string | null
-	comments?: PostComments | null
+	background?: string
+	comments?: PostComments
 	createdAt: number
-	gif?: PostGif | null
-	id?: string
-	image?: string | null
-	interactions?: PostInteractions[] | null
-	shares?: string[] | null
-	text?: string | null
-	updatedAt?: number | null
+	gif?: PostGif
+	id: string
+	image?: string
+	reactions?: PostReaction[]
+	shares?: string[]
+	text?: string
+	updatedAt?: number
 	user: PostUser
-	video?: PostVideo | null
+	video?: PostVideo
 }
 
 export interface PostErrMsg {
-	from: string | null
-	msg: string | null
+	from: string
+	msg: string
 }
 
-export interface PostState {
-	posts: {
-		errMsg: string | null
-		isProcessing: boolean
-		posts: Post[] | []
-	}
+interface CreatePostAction {
+	type: typeof POSTS.CREATE
+	payload: Post
 }
 
-interface ProcessingStartAction {
-	type: typeof PROCESSING_START
-	payload?: null
-}
-
-interface ProcessingCompleteAction {
-	type: typeof PROCESSING_COMPLETE
-	payload?: null
-}
-
-interface ProccessingErrorAction {
-	type: typeof PROCESSING_ERROR
-	payload: PostErrMsg
-}
-
-interface RetrievePostSuccessAction {
-	type: typeof RETRIEVE_POSTS_SUCCESS
+interface RetrievePostsAction {
+	type: typeof POSTS.RETRIEVE
 	payload: Post[]
 }
 
+interface UpdatePostAction {
+	type: typeof POSTS.UPDATE
+	payload: Post
+}
+
+interface DeletePostAction {
+	type: typeof POSTS.DELETE
+	payload: string
+}
+
 export type PostActionTypes =
-	| ProcessingStartAction
-	| ProcessingCompleteAction
-	| ProccessingErrorAction
-	| RetrievePostSuccessAction
+	| CreatePostAction
+	| RetrievePostsAction
+	| UpdatePostAction
+	| DeletePostAction

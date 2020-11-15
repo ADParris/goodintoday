@@ -11,8 +11,8 @@ export default createGlobalStyle`
     --color-text-medium: #4b4f56;
     --color-text-lighter: #616770;
 
-    --color-background: #e9ebee;
-    --color-background-hover: #f5f6f7;
+    --color-background: #f5f6f7;
+    --color-background-hover: #e9ebee;
     
     --color-border: #dddfe2;
 

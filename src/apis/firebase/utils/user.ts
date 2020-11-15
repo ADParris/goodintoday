@@ -24,7 +24,7 @@ export const createUserProfileDocument = async (
 					first: displayName?.split(' ')[0],
 					full: displayName,
 				},
-				profile: `/${displayName?.split(' ').join('').toLowerCase()}`,
+				profile: `${displayName?.split(' ').join('').toLowerCase()}`,
 				createdAt: Date.now(),
 				...additionalData,
 			})

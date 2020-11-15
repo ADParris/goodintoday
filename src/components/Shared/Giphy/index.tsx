@@ -2,45 +2,42 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { fetchGifs } from '../../../apis/giphy'
-import { PostGif } from '../../../redux/posts/types'
-
-import { gifPaginator, Observer } from '../../../helpers'
-
-import GiphySearch from './Search'
+import Observer from './helpers/observer'
+import GiphyHelpers from './processing'
 
 import MoreMenu from '../MoreMenu'
-
+import GiphySearch from './Search'
 import PostButton from './PostButton'
 import CommentButton from './CommentButton'
-
 import DisplayGif from './DisplayGif'
 
-interface PostGifWithId extends PostGif {
-	id: string | number
-}
+import { Gif } from './processing/types'
 
-interface Props {
-	from: string
+interface ComponentProps {
 	id: string
+	from: string
+	onGif: Function
 }
 
-const Giphy = ({ from, id }: Props) => {
-	const [gifs, setGifs] = React.useState<PostGif[]>([])
+const Giphy = ({ from, id, onGif }: ComponentProps) => {
+	const { gifPaginator } = new GiphyHelpers()
+
+	// Component state...
+	const [gifs, setGifs] = React.useState<Gif[]>([])
 	const [isDoneFetching, setIsDoneFetching] = React.useState(false)
 	const [isFetching, setIsFetching] = React.useState(false)
 	const [isLoaderVisible, setIsLoaderVisible] = React.useState(false)
-
 	const [query, setQuery] = React.useState('')
 
-	const paginator = gifPaginator(fetchGifs, gifs as PostGifWithId[], query)
+	const paginator = gifPaginator(fetchGifs, gifs as Gif[], query)
 
 	const onLoaderVisible = (isVisible: boolean) => {
 		setIsLoaderVisible(isVisible)
-		getGifs()
+		retrieveGifs()
 	}
 
-	const getGifs = async () => {
-		const existingGifs = gifs
+	const retrieveGifs = async () => {
+		const existingGifs = gifs as Gif[]
 		if (!isFetching && isLoaderVisible) {
 			setIsFetching(true)
 			let gifs
@@ -79,7 +76,7 @@ const Giphy = ({ from, id }: Props) => {
 	return (
 		<StyledGiphy>
 			<MoreMenu
-				id={id}
+				id={id === 'composer' ? id : `giphy-${id}`}
 				MenuIcon={from === 'post' ? PostButton : CommentButton}
 				top={3.5}
 				reset={handleReset}
@@ -88,12 +85,12 @@ const Giphy = ({ from, id }: Props) => {
 					<GiphySearch
 						handleChange={handleChange}
 						handleKeyPress={handleKeyPress}
-						query={query}
+						query={query ? query : ''}
 					/>
 					<div className="giphy-list">
 						{gifs &&
-							gifs.map((gif: any) => {
-								return <DisplayGif key={gif.id} {...gif} postId={id} />
+							gifs.map((gif: Gif) => {
+								return <DisplayGif key={gif.id} gif={gif} onGif={onGif} />
 							})}
 						{/* {!showLoader && retrievedGifs.length === 0 && noResultsMessage} */}
 						{showLoader && (

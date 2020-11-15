@@ -29,6 +29,10 @@ export default createGlobalStyle`
 
       ul {
         list-style: none;
+
+        li {
+          text-align: -webkit-match-parent;
+        }
       }
 
       a {

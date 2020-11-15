@@ -1,93 +1,122 @@
 import { Dispatch } from 'redux'
-import { firestore, retrievePostsForState } from '../../apis/firebase'
+import { firebase, firestore, retrievePostsForState } from '../../apis/firebase'
 
+import _AsyncActions from '../_async/actions'
+import EditorActions from '../editor/actions'
+
+import { Post, PostActionTypes, POSTS } from './types'
 import { AppThunk } from '../store.types'
-import {
-	Post,
-	PostActionTypes,
-	PostErrMsg,
-	PROCESSING_COMPLETE,
-	PROCESSING_ERROR,
-	PROCESSING_START,
-	RETRIEVE_POSTS_SUCCESS,
-} from './types'
 
-// Processing...
-const processingStart = (): PostActionTypes => ({
-	type: PROCESSING_START,
-})
+export default class PostActions {
+	_async = new _AsyncActions()
+	_editor = new EditorActions()
 
-export const processingComplete = (): PostActionTypes => ({
-	type: PROCESSING_COMPLETE,
-})
+	// Helpers...
+	_addNewPost: Function
+	_addRetrieved: Function
+	_addUpdated: Function
+	_removeDeleted: Function
 
-const processingError = (errMsg: PostErrMsg): PostActionTypes => ({
-	type: PROCESSING_ERROR,
-	payload: errMsg,
-})
+	// CRUD Actions...
+	createPost: Function
+	retrievePosts: Function
+	updatePost: Function
+	deletePost: Function
 
-// Creating...
-export const createPostStartAsync = (post: Post): AppThunk => (
-	dispatch: Dispatch
-) => {
-	const postRef = firestore.collection('posts').doc()
-	dispatch(processingStart())
+	deleteField: Function
 
-	postRef
-		.set(post)
-		.then(() => dispatch(processingComplete()))
-		.then(() => dispatch(retrievePostsStartAsync() as any))
-		.catch(error =>
-			dispatch(processingError({ from: 'create', msg: error.message }))
-		)
-}
-
-// Retrieving...
-const retrievePostsSuccess = (posts: Post[]): PostActionTypes => ({
-	type: RETRIEVE_POSTS_SUCCESS,
-	payload: posts,
-})
-
-export const retrievePostsStartAsync = (): AppThunk => (dispatch: Dispatch) => {
-	dispatch(processingStart())
-
-	retrievePostsForState()
-		.then((prepairedPosts: any) => {
-			dispatch(retrievePostsSuccess(prepairedPosts))
+	constructor() {
+		// Helpers...
+		this._addNewPost = (entry: Post): PostActionTypes => ({
+			type: POSTS.CREATE,
+			payload: entry,
 		})
-		.catch(error =>
-			dispatch(processingError({ from: 'retrieve', msg: error.message }))
-		)
-}
 
-// Updating...
-export const updatePostStartAsync = (post: Post): AppThunk => (
-	dispatch: Dispatch
-) => {
-	const postRef = firestore.collection('posts').doc(post.id)
-	dispatch(processingStart())
+		this._addRetrieved = (posts: Post[]): PostActionTypes => ({
+			type: POSTS.RETRIEVE,
+			payload: posts,
+		})
 
-	postRef
-		.update(post)
-		.then(() => dispatch(processingComplete()))
-		.then(() => dispatch(retrievePostsStartAsync() as any))
-		.catch(error =>
-			dispatch(processingError({ from: 'update', msg: error.message }))
-		)
-}
+		this._addUpdated = (entry: Post): PostActionTypes => ({
+			type: POSTS.UPDATE,
+			payload: entry,
+		})
 
-// Deleting...
-export const deletePostStartAsync = (postId: string): AppThunk => (
-	dispatch: Dispatch
-) => {
-	const postRef = firestore.collection('posts').doc(postId)
-	dispatch(processingStart())
+		this._removeDeleted = (id: string): PostActionTypes => ({
+			type: POSTS.DELETE,
+			payload: id,
+		})
 
-	postRef
-		.delete()
-		.then(() => dispatch(processingComplete()))
-		.then(() => dispatch(retrievePostsStartAsync() as any))
-		.catch(error =>
-			dispatch(processingError({ from: 'delete', msg: error.message }))
-		)
+		// Creating...
+		this.createPost = (entry: Post): AppThunk => (dispatch: Dispatch) => {
+			const postRef = firestore.collection('posts').doc()
+			dispatch(this._async.start())
+			postRef
+				.set(entry)
+				.then(dispatch(this._async.complete()))
+				.then(dispatch(this._addNewPost({ ...entry, id: postRef.id })))
+				.then(dispatch(this._editor.reset() as any))
+				.catch(error =>
+					dispatch(this._async.error({ from: 'creating', msg: error.message }))
+				)
+		}
+
+		// Retrieving...
+		this.retrievePosts = (): AppThunk => (dispatch: Dispatch) => {
+			dispatch(this._async.start())
+			retrievePostsForState()
+				.then(posts => {
+					dispatch(this._addRetrieved(posts))
+				})
+				.then(dispatch(this._async.complete()))
+				.catch(error =>
+					dispatch(
+						this._async.error({ from: 'retrieving', msg: error.message })
+					)
+				)
+		}
+
+		// Updating...
+		this.updatePost = (entry: Post): AppThunk => (dispatch: Dispatch) => {
+			const postRef = firestore.collection('posts').doc(entry.id)
+			dispatch(this._async.start())
+			postRef
+				.update(entry)
+				.then(dispatch(this._async.complete()))
+				.then(dispatch(this._addUpdated(entry)))
+				.catch(error =>
+					dispatch(this._async.error({ from: 'updating', msg: error.message }))
+				)
+		}
+
+		// Deleting...
+		this.deletePost = (id: string): AppThunk => (dispatch: Dispatch) => {
+			const postRef = firestore.collection('posts').doc(id)
+			dispatch(this._async.start())
+			postRef
+				.delete()
+				.then(() => dispatch(this._async.complete()))
+				.then(dispatch(this._removeDeleted(id)))
+				.catch(error =>
+					dispatch(this._async.error({ from: 'deleting', msg: error.message }))
+				)
+		}
+
+		this.deleteField = (id: string, fieldToRemove: string): AppThunk => (
+			dispatch: Dispatch
+		) => {
+			dispatch(this._async.start())
+			const postRef = firestore.collection('posts').doc(id)
+			postRef
+				.update({
+					[fieldToRemove]: firebase.firestore.FieldValue.delete(),
+				})
+				.then(() => dispatch(this._async.complete()))
+				.catch(error =>
+					dispatch(
+						this._async.error({ from: 'deleteField', msg: error.message })
+					)
+				)
+		}
+	}
 }

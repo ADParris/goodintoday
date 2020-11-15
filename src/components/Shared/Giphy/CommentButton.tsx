@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import GifIcon from '../../../assets/gif-icon.png'
+import GifIcon from './assets/gif.png'
 
 const CommentGiphyButton = () => (
 	<StyledCommentGiphyButton>

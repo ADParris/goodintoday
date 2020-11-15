@@ -1,18 +1,18 @@
 import { createSelector } from 'reselect'
 
-import { PostState } from './types'
+import { Post, PostState } from './types'
 
-const selectPosts = (state: PostState) => state.posts
+export default class PostsSelectors {
+	selectPosts: (state: PostState) => Post[]
 
-export const selectCurrentPosts = createSelector(
-	[selectPosts],
-	posts => posts && posts.posts
-)
+	selectCurrentPosts: Reselect.OutputSelector<
+		PostState,
+		Post[],
+		(res: Post[]) => Post[]
+	>
+	constructor() {
+		this.selectPosts = (state: PostState) => state.posts
 
-export const selectPostById = (id: string) =>
-	createSelector([selectPosts], posts =>
-		posts.posts.filter(post => post.id === id)
-	)
-
-export const selectIsProcessing = () =>
-	createSelector([selectPosts], posts => posts.isProcessing)
+		this.selectCurrentPosts = createSelector([this.selectPosts], posts => posts)
+	}
+}

@@ -1,27 +1,25 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useDispatch } from 'react-redux'
 
-import { prepostItem } from '../../../redux/prepost/actions'
-import { isOpen } from '../../../redux/composer/actions'
-import { toggleMenu } from '../../../redux/menu/actions'
+import { useDispatch } from 'react-redux'
+import SystemActions from '../../../redux/system/actions'
+
 import { PostGif } from '../../../redux/posts/types'
 
-interface Props extends PostGif {
-	postId: string
+interface ComponentProps {
+	onGif: Function
+	gif: PostGif
 }
 
-const DisplayGif = ({ image, link, postId, site, title }: Props) => {
+const DisplayGif = ({ onGif, gif }: ComponentProps) => {
+	const { setCurrentMenu } = new SystemActions()
 	const dispatch = useDispatch()
 
+	const { image, title } = gif as PostGif
+
 	const handleClick = () => {
-		dispatch(
-			prepostItem(postId, {
-				gif: { image, link, site, title },
-			} as any)
-		)
-		dispatch(toggleMenu(''))
-		dispatch(isOpen(true))
+		onGif({ gif: gif })
+		dispatch(setCurrentMenu(''))
 	}
 
 	return (

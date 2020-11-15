@@ -1,35 +1,42 @@
 import React from 'react'
 import styled from 'styled-components'
+
 import { useDispatch, useSelector } from 'react-redux'
+import SystemSelectors from '../../redux/system/selectors'
+import SystemActions from '../../redux/system/actions'
 
-import { selectMenuState } from '../../redux/menu/selectors'
-import { toggleMenu } from '../../redux/menu/actions'
-
-interface MoreMenuProps {
-	id: string
+interface ComponentProps extends StyleProps {
 	children: any
+	id: string
 	MenuIcon: any
-	top: number
 	reset?: any
 }
 
-interface TopProp {
+interface StyleProps {
 	top: number
 }
 
-const MoreMenu = ({ children, id, MenuIcon, top, reset }: MoreMenuProps) => {
-	const [isOpen, setIsOpen] = React.useState(false)
-	const menuId = useSelector(selectMenuState) as string
+const MoreMenu = ({ children, id, MenuIcon, top, reset }: ComponentProps) => {
+	const { selectCurrentMenu } = new SystemSelectors()
+	const { setCurrentMenu } = new SystemActions()
 	const dispatch = useDispatch()
 
-	React.useEffect(() => {
-		menuId === id ? setIsOpen(true) : setIsOpen(false)
-	}, [id, menuId])
+	// Component state...
+	const [isOpen, setIsOpen] = React.useState(false)
 
+	// Redux store...
+	const menuId = useSelector(selectCurrentMenu)
+
+	// Component handlers...
 	const handleClick = () => {
-		menuId === id ? dispatch(toggleMenu('')) : dispatch(toggleMenu(id))
+		menuId === id ? dispatch(setCurrentMenu('')) : dispatch(setCurrentMenu(id))
 		reset && reset()
 	}
+
+	// Component controller...
+	React.useEffect(() => {
+		menuId && menuId === id ? setIsOpen(true) : setIsOpen(false)
+	}, [id, menuId])
 
 	return (
 		<StyledMoreMenu className="more-menu" top={top}>
@@ -90,7 +97,7 @@ const StyledMoreMenu = styled.div`
 		overflow: hidden;
 		display: flex;
 		z-index: 5;
-		top: ${(props: TopProp) => props.top}rem;
+		top: ${(props: StyleProps) => props.top}rem;
 		right: 0;
 
 		.menu-frame-inner {

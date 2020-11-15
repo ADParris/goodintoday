@@ -9,5 +9,6 @@ export const retrievePostsForState = async () => {
 		posts.docs.map(doc => ({ id: doc.id, ...doc.data() }))
 	)
 	allBuilt.sort((a: any, b: any): any => b.createdAt - a.createdAt)
+
 	return allBuilt
 }

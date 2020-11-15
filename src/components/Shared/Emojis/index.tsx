@@ -1,22 +1,24 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Picker } from 'emoji-mart'
+import { BaseEmoji, Picker } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 
 import MoreMenu from '../MoreMenu'
 
 import EmojiIcon from './Button'
 
-const Emojis = ({ addEmoji, id }: any) => {
+const Emojis = ({ id, onEmoji }: any) => {
+	const handleSelection = (emoji: BaseEmoji) => onEmoji(emoji.native)
+
 	return (
 		<StyledEmojis>
-			<MoreMenu id={id} MenuIcon={EmojiIcon} top={4}>
+			<MoreMenu id={`emojis-${id}`} MenuIcon={EmojiIcon} top={4}>
 				<Picker
 					set="facebook"
 					showPreview={false}
 					showSkinTones={false}
-					onSelect={addEmoji}
+					onSelect={handleSelection}
 				/>
 			</MoreMenu>
 		</StyledEmojis>

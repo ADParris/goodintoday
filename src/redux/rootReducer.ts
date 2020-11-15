@@ -1,20 +1,15 @@
 import { combineReducers } from 'redux'
 
-import composer from './composer/reducer'
-import menu from './menu/reducer'
-import modal from './modal/reducer'
+import _async from './_async/reducer'
+import editor from './editor/reducer'
 import posts from './posts/reducer'
-import prepost from './prepost/reducer'
-import user from './user/reducer'
+import system from './system/reducer'
 
 export const rootReducer = combineReducers({
-	composer,
-	menu,
-	modal,
+	_async,
+	editor,
 	posts,
-	prepost,
-	user,
+	system,
 })
 
 export type RootState = ReturnType<typeof rootReducer>
-// { posts: PostsState, comments: CommentsState, users: UsersState }

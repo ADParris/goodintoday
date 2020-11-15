@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import EmojiIcon from '../../../assets/emoji-icon.png'
+import EmojiIcon from './assets/emoji.png'
 
 const EmojiButton = () => (
 	<StyledEmojiButton>

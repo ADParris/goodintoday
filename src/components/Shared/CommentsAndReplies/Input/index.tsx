@@ -58,41 +58,53 @@ const CommentsAndRepliesInput = ({ cid, post }: ComponentProps) => {
 
 	return (
 		<StyledCommentsAndRepliesInput>
-			<UserDisplay size={3.2} />
-			<div className="wrap">
-				<div className="wrap-editor">
-					<DraftInput
-						editorState={editorState}
-						editorType={editorType}
-						handleSubmit={handleSubmit}
-						setEditorState={setEditorState}
-					/>
-					<InputOptions
-						id={id}
-						handleEmoji={handleEmoji}
-						handleGif={handleGif}
-					/>
+			<div className="input-wrap">
+				<div className="user-wrap">
+					<UserDisplay size={3.2} />
 				</div>
-				<PrepostDisplay id={id} />
+				<div className="editor-wrap">
+					<div className="editor">
+						<DraftInput
+							editorState={editorState}
+							editorType={editorType}
+							handleSubmit={handleSubmit}
+							setEditorState={setEditorState}
+						/>
+						<InputOptions
+							id={id}
+							handleEmoji={handleEmoji}
+							handleGif={handleGif}
+						/>
+					</div>
+					<PrepostDisplay id={id} />
+				</div>
 			</div>
 		</StyledCommentsAndRepliesInput>
 	)
 }
 
 const StyledCommentsAndRepliesInput = styled.div`
-	padding: var(--gap-inner) var(--gap-outer) var(--gap-outer);
-	display: flex;
+	border-top: 0.1rem solid #dadde1;
+	background-color: #fff;
 
-	.wrap {
-		flex-grow: 1;
+	.input-wrap {
+		padding: var(--gap-inner) var(--gap-outer);
 
-		&-editor {
-			margin-left: var(--gap-inner);
-			border: 0.1rem solid #ccd0d5;
-			background-color: #f2f3f5;
-			justify-content: flex-end;
-			border-radius: 1.6rem;
-			display: flex;
+		.user-wrap {
+			margin-right: var(--gap-inner);
+			float: left;
+		}
+
+		.editor-wrap {
+			flex-grow: 1;
+
+			.editor {
+				border: 0.1rem solid #ccd0d5;
+				background-color: #f2f3f5;
+				justify-content: flex-end;
+				border-radius: 1.6rem;
+				display: flex;
+			}
 		}
 	}
 `

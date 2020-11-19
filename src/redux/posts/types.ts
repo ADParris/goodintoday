@@ -4,11 +4,21 @@ export const POSTS = {
 	RETRIEVE: 'RETRIEVE',
 	UPDATE: 'UPDATE',
 	DELETE: 'DELETE',
+	LAST_DOCUMENT: 'LAST_DOCUMENT',
+	SET_AT_END: 'SET_AT_END',
+	SET_LOADER_VISIBLE: 'SET_LOADER_VISIBLE',
 }
 
 // Interfaces...
+export interface Posts {
+	atEnd: boolean
+	lastDocument: any
+	list: Post[]
+	loaderVisible: boolean
+}
+
 export interface PostState {
-	posts: Post[]
+	posts: Posts
 }
 
 export interface PostComments {
@@ -112,8 +122,20 @@ interface DeletePostAction {
 	payload: string
 }
 
+interface SetAtEndAction {
+	type: typeof POSTS.SET_AT_END
+	payload: boolean
+}
+
+interface SetLoaderVisibleAction {
+	type: typeof POSTS.SET_LOADER_VISIBLE
+	payload: boolean
+}
+
 export type PostActionTypes =
 	| CreatePostAction
 	| RetrievePostsAction
 	| UpdatePostAction
 	| DeletePostAction
+	| SetAtEndAction
+	| SetLoaderVisibleAction

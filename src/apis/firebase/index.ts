@@ -1,12 +1,12 @@
 import firebase, { auth, firestore, signInWithGoogle } from './config'
-import { retrievePostsForState } from './utils/posts'
+import Retrieve from './utils/posts'
 import { createUserProfileDocument } from './utils/user'
 
 export {
 	auth,
 	firebase,
 	firestore,
+	Retrieve,
 	signInWithGoogle,
-	retrievePostsForState,
 	createUserProfileDocument,
 }

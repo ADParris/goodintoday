@@ -4,6 +4,14 @@ export const _ASYNC = {
 	ERROR: 'ASYNC_ERROR',
 }
 
+export interface _Async {
+	active: boolean
+	errMsg: {
+		from?: string
+		text?: string
+	}
+}
+
 export interface AsyncErrMsg {
 	from?: string
 	msg?: string

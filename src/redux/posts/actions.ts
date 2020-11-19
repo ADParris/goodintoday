@@ -1,29 +1,36 @@
+import store from '../store'
 import { Dispatch } from 'redux'
-import { firebase, firestore, retrievePostsForState } from '../../apis/firebase'
+import { firebase, firestore, Retrieve } from '../../apis/firebase'
 
 import _AsyncActions from '../_async/actions'
 import EditorActions from '../editor/actions'
 
-import { Post, PostActionTypes, POSTS } from './types'
+import { Post, PostActionTypes, POSTS, Posts } from './types'
 import { AppThunk } from '../store.types'
+import { _Async } from '../_async/types'
 
 export default class PostActions {
 	_async = new _AsyncActions()
 	_editor = new EditorActions()
+	_retrieve = new Retrieve()
 
 	// Helpers...
-	_addNewPost: Function
-	_addRetrieved: Function
-	_addUpdated: Function
-	_removeDeleted: Function
+	_addNewPost: (entry: Post) => PostActionTypes
+	_addRetrieved: (posts: Post[]) => PostActionTypes
+	_addUpdated: (entry: Post) => PostActionTypes
+	_removeDeleted: (id: string) => PostActionTypes
 
 	// CRUD Actions...
-	createPost: Function
-	retrievePosts: Function
-	updatePost: Function
-	deletePost: Function
+	createPost: (entry: Post) => AppThunk
+	retrievePosts: (id: string) => AppThunk
+	updatePost: (entry: Post) => AppThunk
+	deletePost: (id: string) => AppThunk
 
-	deleteField: Function
+	deleteField: (id: string, fieldToRemove: string) => AppThunk
+
+	// Boolean Actions...
+	setAtEnd: (value: boolean) => PostActionTypes
+	setLoaderVisible: (value: boolean) => PostActionTypes
 
 	constructor() {
 		// Helpers...
@@ -54,7 +61,7 @@ export default class PostActions {
 			postRef
 				.set(entry)
 				.then(dispatch(this._async.complete()))
-				.then(dispatch(this._addNewPost({ ...entry, id: postRef.id })))
+				.then(() => dispatch(this._addNewPost({ ...entry, id: postRef.id })))
 				.then(dispatch(this._editor.reset() as any))
 				.catch(error =>
 					dispatch(this._async.error({ from: 'creating', msg: error.message }))
@@ -62,18 +69,54 @@ export default class PostActions {
 		}
 
 		// Retrieving...
-		this.retrievePosts = (): AppThunk => (dispatch: Dispatch) => {
-			dispatch(this._async.start())
-			retrievePostsForState()
-				.then(posts => {
-					dispatch(this._addRetrieved(posts))
-				})
-				.then(dispatch(this._async.complete()))
-				.catch(error =>
+		this.retrievePosts = (id: string): AppThunk => async (
+			dispatch: Dispatch
+		) => {
+			// Get relevant state objects...
+			const { _async, posts } = store.getState()
+			const async = _async as _Async
+			const { active } = async
+			const postState = posts as Posts
+			const { lastDocument, list, loaderVisible } = postState
+
+			// Set functions constants...
+			const isFetching = active
+			const existingPosts = list.length !== 0
+
+			// Run function...
+			if (!isFetching && loaderVisible) {
+				dispatch(this._async.start())
+				let retrievedPosts
+				try {
+					retrievedPosts = existingPosts
+						? await this._retrieve.more(id, lastDocument)
+						: await this._retrieve.initial(id)
+				} catch (error) {
 					dispatch(
 						this._async.error({ from: 'retrieving', msg: error.message })
 					)
-				)
+				}
+				if (retrievedPosts) {
+					const { retrieved, lastDocument } = retrievedPosts as {
+						retrieved: { id: string }[]
+						lastDocument: any
+					}
+					if (!lastDocument) {
+						dispatch(this.setAtEnd(true))
+						dispatch({
+							type: POSTS.LAST_DOCUMENT,
+							payload: null,
+						})
+					} else {
+						dispatch(this._async.complete())
+						dispatch({
+							type: POSTS.LAST_DOCUMENT,
+							payload: lastDocument,
+						})
+						dispatch(this._addRetrieved(retrieved as Post[]))
+					}
+				}
+			}
 		}
 
 		// Updating...
@@ -83,7 +126,7 @@ export default class PostActions {
 			postRef
 				.update(entry)
 				.then(dispatch(this._async.complete()))
-				.then(dispatch(this._addUpdated(entry)))
+				.then(() => dispatch(this._addUpdated(entry)))
 				.catch(error =>
 					dispatch(this._async.error({ from: 'updating', msg: error.message }))
 				)
@@ -96,7 +139,7 @@ export default class PostActions {
 			postRef
 				.delete()
 				.then(() => dispatch(this._async.complete()))
-				.then(dispatch(this._removeDeleted(id)))
+				.then(() => dispatch(this._removeDeleted(id)))
 				.catch(error =>
 					dispatch(this._async.error({ from: 'deleting', msg: error.message }))
 				)
@@ -118,5 +161,15 @@ export default class PostActions {
 					)
 				)
 		}
+
+		this.setAtEnd = (value: boolean): PostActionTypes => ({
+			type: POSTS.SET_AT_END,
+			payload: value,
+		})
+
+		this.setLoaderVisible = (value: boolean): PostActionTypes => ({
+			type: POSTS.SET_LOADER_VISIBLE,
+			payload: value,
+		})
 	}
 }

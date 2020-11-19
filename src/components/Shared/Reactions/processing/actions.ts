@@ -27,7 +27,7 @@ export default class Actions {
 		// Creating...
 		this.create = ({ cid, post, type, rid, user }: ProcessActions) => {
 			console.log(`creating reaction...`)
-			let updatedPost
+			let updatedPost: Post
 			const newReaction = {
 				id: user.id,
 				type: type,
@@ -77,7 +77,7 @@ export default class Actions {
 					? { ...post, reactions: [...post!.reactions, newReaction] }
 					: { ...post, reactions: [newReaction] }
 			}
-			store.dispatch(this.postActions.updatePost(updatedPost))
+			store.dispatch(this.postActions.updatePost(updatedPost) as any)
 		}
 
 		// Updating...
@@ -126,7 +126,7 @@ export default class Actions {
 				)
 				updatedPost = { ...post, reactions: updatedReactions }
 			}
-			store.dispatch(this.postActions.updatePost(updatedPost))
+			store.dispatch(this.postActions.updatePost(updatedPost) as any)
 		}
 
 		// Deleting...
@@ -158,7 +158,7 @@ export default class Actions {
 						this.postActions.deleteField(
 							updatedPost.id,
 							`comments.${cid}.replies.${rid}.reactions`
-						)
+						) as any
 					)
 				} else {
 					updatedPost = {
@@ -194,7 +194,7 @@ export default class Actions {
 						this.postActions.deleteField(
 							updatedPost.id,
 							`comments.${cid}.reactions`
-						)
+						) as any
 					)
 				} else {
 					updatedPost = {
@@ -214,13 +214,13 @@ export default class Actions {
 					delete post.reactions
 					updatedPost = { ...post }
 					store.dispatch(
-						this.postActions.deleteField(updatedPost.id, 'reactions')
+						this.postActions.deleteField(updatedPost.id, 'reactions') as any
 					)
 				} else {
 					updatedPost = { ...post, reactions: updatedReactions }
 				}
 			}
-			store.dispatch(this.postActions.updatePost(updatedPost))
+			store.dispatch(this.postActions.updatePost(updatedPost as Post) as any)
 		}
 	}
 }

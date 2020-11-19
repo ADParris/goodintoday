@@ -94,7 +94,7 @@ const Reply = ({ cid, comment, post, reply, rid }: ComponentProps) => {
 
 const StyledCommentAndReply = styled.li`
 	.car-wrap-outer {
-		padding: 0.4rem 4.4rem 0.4rem 1.2rem;
+		padding: 0.4rem 1.2rem;
 		margin-top: 0.4rem;
 		position: relative;
 		display: flex;
@@ -128,6 +128,8 @@ const StyledCommentAndReply = styled.li`
 			.car-area {
 				.car-media {
 					position: relative;
+					max-width: 40rem;
+
 					.media-container {
 						border-radius: 1.8rem;
 						overflow: hidden;

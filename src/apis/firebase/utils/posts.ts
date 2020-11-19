@@ -1,14 +1,91 @@
-import { firestore } from '../config'
+import { firebase, firestore } from '../index'
 
-export const retrievePostsForState = async () => {
-	const postsRef = firestore.collection('posts')
+export default class Posts {
+	filtered: (id: string) => Promise<{ id: string }[]>
+	initial: (
+		id: string
+	) => Promise<{
+		retrieved: { id: string }[]
+		lastDocument: firebase.firestore.QueryDocumentSnapshot<
+			firebase.firestore.DocumentData
+		> | null
+	}>
+	more: (
+		id: string,
+		lastDocument: any
+	) => Promise<{
+		retrieved: { id: string }[]
+		lastDocument: firebase.firestore.QueryDocumentSnapshot<
+			firebase.firestore.DocumentData
+		> | null
+	}>
 
-	const posts = await postsRef.get()
+	lastDocument: firebase.firestore.QueryDocumentSnapshot<
+		firebase.firestore.DocumentData
+	> | null
+	postsRef: firebase.firestore.CollectionReference<
+		firebase.firestore.DocumentData
+	>
+	queryRef: firebase.firestore.Query<firebase.firestore.DocumentData>
 
-	const allBuilt = await Promise.all(
-		posts.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-	)
-	allBuilt.sort((a: any, b: any): any => b.createdAt - a.createdAt)
+	constructor() {
+		this.lastDocument = null
+		this.postsRef = firestore.collection('posts')
+		this.queryRef = {} as firebase.firestore.Query<
+			firebase.firestore.DocumentData
+		>
 
-	return allBuilt
+		this.filtered = async (id: string) => {
+			this.queryRef = this.postsRef
+				.where('user.id', '==', id)
+				.orderBy('createdAt', 'desc')
+				.limit(10)
+			const posts = await this.queryRef.get()
+
+			const postCount = posts.docs.length
+			const retrieved = await Promise.all(
+				posts.docs.map((doc, i) => {
+					this.lastDocument = postCount === i + 1 ? doc : null
+					return { id: doc.id, ...doc.data() }
+				})
+			)
+			return retrieved
+		}
+
+		this.initial = async (id: string) => {
+			this.queryRef = this.postsRef
+				.where('user.id', '==', id)
+				.orderBy('createdAt', 'desc')
+				.limit(5)
+			const posts = await this.queryRef.get()
+
+			const postCount = posts.docs.length
+			const retrieved = await Promise.all(
+				posts.docs.map((doc, i) => {
+					this.lastDocument = postCount === i + 1 ? doc : null
+					return { id: doc.id, ...doc.data() }
+				})
+			)
+			return { retrieved, lastDocument: this.lastDocument }
+		}
+
+		this.more = async (id: string, lastDocument: any) => {
+			console.log(lastDocument)
+			this.queryRef = this.postsRef
+				.where('user.id', '==', id)
+				.orderBy('createdAt', 'desc')
+				.startAfter(lastDocument)
+				.limit(10)
+			const posts = await this.queryRef.get()
+
+			const postCount = posts.docs.length
+			const retrieved = await Promise.all(
+				posts.docs.map((doc, i) => {
+					this.lastDocument = postCount === i + 1 ? doc : null
+					return { id: doc.id, ...doc.data() }
+				})
+			)
+			return { retrieved, lastDocument: this.lastDocument }
+		}
+	}
 }

@@ -1,29 +1,43 @@
 import { PostActionTypes, Post, POSTS } from './types'
 
-const INITIAL_STATE: Post[] = []
+const INITIAL_STATE = {
+	atEnd: false,
+	lastDocument: null,
+	list: [] as Post[],
+	loaderVisible: false,
+}
 
 export default (state = INITIAL_STATE, { type, payload }: PostActionTypes) => {
-	let updatedState
+	let updatedList
 	switch (type) {
 		case POSTS.CREATE:
-			return [payload, ...state]
+			return { ...state, list: [payload as Post, ...state.list] }
 
 		case POSTS.RETRIEVE:
-			return [...state, ...(payload as Post[])]
+			return { ...state, list: [...state.list, ...(payload as Post[])] }
 
 		case POSTS.UPDATE:
 			const newEntry = payload as Post
-			updatedState = state.map(entry =>
+			updatedList = state.list.map(entry =>
 				entry.id === newEntry.id ? newEntry : entry
 			)
-			return [...updatedState]
+			return { ...state, list: [...updatedList] }
 
 		case POSTS.DELETE:
-			updatedState = state
+			updatedList = state.list
 			const entryId = payload as string
-			const removeEntry = updatedState.map(entry => entry.id).indexOf(entryId)
-			~removeEntry && updatedState.splice(removeEntry, 1)
-			return [...updatedState]
+			const removeEntry = updatedList.map(entry => entry.id).indexOf(entryId)
+			~removeEntry && updatedList.splice(removeEntry, 1)
+			return { ...state, list: [...updatedList] }
+
+		case POSTS.LAST_DOCUMENT:
+			return { ...state, lastDocument: payload }
+
+		case POSTS.SET_AT_END:
+			return { ...state, atEnd: payload }
+
+		case POSTS.SET_LOADER_VISIBLE:
+			return { ...state, loaderVisible: payload }
 
 		default:
 			return state

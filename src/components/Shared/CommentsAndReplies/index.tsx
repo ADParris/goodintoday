@@ -16,18 +16,20 @@ interface ComponentProps {
 }
 
 const CommentsAndReplies = ({ cid, comment, post }: ComponentProps) => {
-	const { selectId } = new EditorSelectors()
+	const { selectId, selectIsEditing } = new EditorSelectors()
 
 	// Component state...
 	const [inputVisible, setInputVisible] = React.useState(false)
 
+	// Redux store...
 	const editorId = useSelector(selectId)
+	const isEditing = useSelector(selectIsEditing)
 
 	React.useEffect(() => {
-		editorId === `comment-${cid}` || (!cid && !comment)
+		;(!isEditing && editorId === `comment-${cid}`) || (!cid && !comment)
 			? setInputVisible(true)
 			: setInputVisible(false)
-	}, [cid, comment, editorId])
+	}, [cid, comment, editorId, isEditing])
 
 	return (
 		<StyledCommentsAndReplies>

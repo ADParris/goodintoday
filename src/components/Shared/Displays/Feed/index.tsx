@@ -1,11 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { useDispatch, useSelector } from 'react-redux'
-import PostsSelectors from '../../../../redux/posts/selectors'
-import PostActions from '../../../../redux/posts/actions'
-
-import Post from '../../../Post'
 import Comment from '../../CommentsAndReplies/CommentAndReply'
 import Reply from '../../CommentsAndReplies/CommentAndReply'
 
@@ -18,18 +13,10 @@ import {
 interface ComponentProps {
 	cid?: string
 	comment?: PostComment
-	post?: IPost
+	post: IPost
 }
 
 const Feed = ({ cid, comment, post }: ComponentProps) => {
-	const { selectCurrentPosts } = new PostsSelectors()
-	const { retrievePosts } = new PostActions()
-
-	const dispatch = useDispatch()
-
-	// Redux store...
-	const posts = useSelector(selectCurrentPosts)
-
 	const theFeed = (): JSX.Element[] => {
 		const data =
 			cid && comment && post
@@ -52,7 +39,7 @@ const Feed = ({ cid, comment, post }: ComponentProps) => {
 				}
 				feed.push(<Reply key={key} {...propsToPass} />)
 			}
-		} else if (post) {
+		} else {
 			// Comments feed...
 			for (let key in data) {
 				const comment = data[key as keyof typeof data]
@@ -63,19 +50,9 @@ const Feed = ({ cid, comment, post }: ComponentProps) => {
 				}
 				feed.push(<Comment key={key} {...propsToPass} />)
 			}
-		} else {
-			// Posts feed...
-			posts.forEach((post: IPost) => {
-				return feed.push(<Post key={post.id} post={post} />)
-			})
 		}
 		return feed
 	}
-
-	// Load initial posts...
-	React.useEffect(() => {
-		!post && dispatch(retrievePosts())
-	}, [])
 
 	return <StyledFeed>{theFeed().map(item => item)}</StyledFeed>
 }

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import SystemSelectors from '../../redux/system/selectors'
 
 import Composer from '../../components/Composer'
-import Feed from '../../components/Shared/Displays/Feed'
+import Feed from './Feed'
 
 interface StyleProps {
 	page: string

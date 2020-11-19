@@ -16,18 +16,19 @@ interface ComponentProps {
 
 const PostMoreMenu = ({ post }: ComponentProps) => {
 	const { setId, setIsEditing } = new EditorActions()
+	const { setCurrentMenu } = new SystemActions()
 	const posting = new Posting()
-	const system = new SystemActions()
+
 	const dispatch = useDispatch()
 
 	const handleEdit = () => {
 		dispatch(setId(post.id)) && dispatch(setIsEditing(true))
-		dispatch(system.setCurrentMenu(''))
+		dispatch(setCurrentMenu(''))
 	}
 
 	const handleDelete = () => {
 		posting.delete({ post })
-		dispatch(system.setCurrentMenu(''))
+		dispatch(setCurrentMenu(''))
 	}
 
 	return (

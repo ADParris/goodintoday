@@ -51,17 +51,17 @@ export default class Posting {
 						},
 					},
 				}
-				store.dispatch(this.posting.updatePost(updatedPost))
+				store.dispatch(this.posting.updatePost(updatedPost) as any)
 			} else if (post) {
 				// Comment...
 				const updatedPost = {
 					...post,
 					comments: { ...post!.comments, [uuid()]: newEntry },
 				} as Post
-				store.dispatch(this.posting.updatePost(updatedPost))
+				store.dispatch(this.posting.updatePost(updatedPost) as any)
 			} else {
 				// Post...
-				store.dispatch(this.posting.createPost(newEntry))
+				store.dispatch(this.posting.createPost(newEntry as Post) as any)
 			}
 		}
 
@@ -123,7 +123,7 @@ export default class Posting {
 				// Post...
 				updatedPost = { ...updatedEntry, id: post!.id }
 			}
-			store.dispatch(this.posting.updatePost(updatedPost))
+			store.dispatch(this.posting.updatePost(updatedPost as Post) as any)
 		}
 
 		// Deleting...
@@ -135,20 +135,20 @@ export default class Posting {
 				if (Object.keys(post.comments![cid].replies!).length === 0) {
 					// TODO: Not working...
 					store.dispatch(
-						this.posting.deleteField(post!.id, `comments.${cid}.replies`)
+						this.posting.deleteField(post!.id, `comments.${cid}.replies`) as any
 					)
 				}
-				store.dispatch(this.posting.updatePost(post))
+				store.dispatch(this.posting.updatePost(post) as any)
 			} else if (cid && post) {
 				// Comment...
 				delete post!.comments![cid]
 				if (Object.keys(post!.comments!).length === 0) {
-					store.dispatch(this.posting.deleteField(post!.id, 'comments'))
+					store.dispatch(this.posting.deleteField(post!.id, 'comments') as any)
 				}
-				store.dispatch(this.posting.updatePost(post))
+				store.dispatch(this.posting.updatePost(post) as any)
 			} else {
 				// Post...
-				store.dispatch(this.posting.deletePost(post!.id))
+				store.dispatch(this.posting.deletePost(post!.id) as any)
 			}
 		}
 	}

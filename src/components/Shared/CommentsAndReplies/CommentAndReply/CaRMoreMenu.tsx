@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { useDispatch } from 'react-redux'
 import EditorActions from '../../../../redux/editor/actions'
+import SystemActions from '../../../../redux/system/actions'
 
 import Posting from '../../../../helpers/posting'
 
@@ -17,12 +18,20 @@ interface ComponentProps {
 
 const CommentAndReplyMoreMenu = ({ cid, id, post, rid }: ComponentProps) => {
 	const { setId, setIsEditing } = new EditorActions()
+	const { setCurrentMenu } = new SystemActions()
 	const posting = new Posting()
+
 	const dispatch = useDispatch()
 
-	const handleEdit = () => dispatch(setId(id)) && dispatch(setIsEditing(true))
+	const handleEdit = () => {
+		dispatch(setId(id)) && dispatch(setIsEditing(true))
+		dispatch(setCurrentMenu(''))
+	}
 
-	const handleDelete = () => posting.delete({ cid, post, rid })
+	const handleDelete = () => {
+		posting.delete({ cid, post, rid })
+		dispatch(setCurrentMenu(''))
+	}
 
 	return (
 		<StyledCommentAndReplyMoreMenu>

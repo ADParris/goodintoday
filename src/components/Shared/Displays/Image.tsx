@@ -15,7 +15,6 @@ const ImageDisplay = ({ src, alt }: ImageDisplayProps) => (
 const StyledImageDisplay = styled.div`
 	border-bottom: 0.1rem solid var(--color-border);
 	border-top: 0.1rem solid var(--color-border);
-	max-width: 49.8rem;
 	display: flex;
 
 	img {

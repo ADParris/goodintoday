@@ -24,6 +24,7 @@ interface ComponentProps {
 
 interface StyleProps {
 	background?: string
+	composerActive: boolean
 	hasPrepost: boolean
 	isComposer: boolean
 	isEditing: boolean
@@ -53,7 +54,8 @@ const DraftInput = ({
 	const user = useSelector(selectCurrentUser)
 
 	// Component constants...
-	const isComposer = editorId === 'composer'
+	const isComposer = editorType === 'composer'
+	const composerActive = editorId === 'composer'
 	const myKeyBindingFn = (e: React.KeyboardEvent<{}>): string | null =>
 		e.key === 'Escape' || e.key === 'Esc'
 			? 'esc_command'
@@ -101,6 +103,7 @@ const DraftInput = ({
 	return (
 		<StyledDraftInput
 			background={background}
+			composerActive={composerActive}
 			hasPrepost={hasPrepost}
 			isComposer={isComposer}
 			isEditing={isEditing}
@@ -125,7 +128,7 @@ const StyledDraftInput = styled.div`
 			? '10rem 2.7rem'
 			: props.isComposer || (props.isEditing && props.wasComposer)
 			? 'var(--gap-outer)'
-			: 'var(--gap-inner)'};
+			: 'var(--gap-inner) var(--gap-outer)'};
 	background: ${(props: StyleProps) =>
 		(props.isComposer && props.background) ||
 		(props.isEditing && props.wasComposer)
@@ -143,32 +146,30 @@ const StyledDraftInput = styled.div`
 		props.isComposer || (props.isEditing && props.wasComposer)
 			? 'none'
 			: 'initial'};
-	margin: ${(props: StyleProps) =>
-		props.isComposer || (props.isEditing && props.wasComposer)
-			? '0'
-			: '0 var(--gap-outer)'};
 	height: ${(props: StyleProps) =>
-		props.isComposer || (props.isEditing && props.wasComposer)
-			? '100%'
-			: '3.2rem'};
-	width: ${(props: StyleProps) =>
-		props.isComposer || (props.isEditing && props.wasComposer)
-			? '100%'
-			: 'calc(100% - 2.6rem)'};
+		(props.isComposer || (props.isEditing && props.wasComposer)) && '100%'};
+	width: 100%;
+
+	// Added...
+	overflow: hidden;
+	flex: 1 1 auto;
+	cursor: text;
 
 	.DraftEditor {
 		&-root {
 			color: ${(props: StyleProps) => (props.background ? 'white' : 'black')};
 			font-size: ${(props: StyleProps) => {
 				if (
-					(props.isComposer || (props.isEditing && props.wasComposer)) &&
+					((props.isComposer && props.composerActive) ||
+						(props.isEditing && props.wasComposer)) &&
 					props.background &&
 					!props.hasPrepost &&
 					props.length <= 85
 				)
 					return '3rem'
 				if (
-					(props.isComposer || (props.isEditing && props.wasComposer)) &&
+					((props.isComposer && props.composerActive) ||
+						(props.isEditing && props.wasComposer)) &&
 					!props.background &&
 					!props.hasPrepost &&
 					props.length <= 85
